@@ -191,19 +191,26 @@ const FAQ: React.FC = () => {
   return (
     <div className="overflow-hidden">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 text-white">
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
+      <section className="relative hero-gradient text-white overflow-hidden">
+        {/* Animated background elements */}
+        <div className="absolute inset-0 bg-gradient-to-r from-primary-950/80 to-secondary-950/80"></div>
+        <div className="absolute top-0 left-0 w-full h-full">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-primary-500/10 rounded-full blur-3xl animate-pulse-slow"></div>
+          <div className="absolute top-40 right-20 w-96 h-96 bg-secondary-500/10 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '1s'}}></div>
+          <div className="absolute bottom-20 left-1/4 w-64 h-64 bg-primary-400/10 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '2s'}}></div>
+        </div>
+        
+        <div className="relative max-w-7xl mx-auto container-padding py-24 lg:py-32">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.8 }}
             className="text-center"
           >
-            <h1 className="text-4xl lg:text-6xl font-bold leading-tight mb-6">
-              Frequently Asked <span className="text-accent-400">Questions</span>
+            <h1 className="text-4xl lg:text-6xl font-black leading-tight mb-8 text-shadow-lg">
+              Frequently Asked <span className="text-gradient">Questions</span>
             </h1>
-            <p className="text-xl text-primary-100 mb-8 max-w-4xl mx-auto leading-relaxed">
+            <p className="text-xl text-primary-100 mb-10 max-w-4xl mx-auto leading-relaxed">
               Find answers to common questions about our IT services, processes, and solutions. 
               Can't find what you're looking for? Contact us directly.
             </p>
@@ -223,7 +230,7 @@ const FAQ: React.FC = () => {
                 placeholder="Search FAQs..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 text-lg"
+                className="input-field w-full pl-12 pr-4 text-lg"
               />
             </div>
 
@@ -260,7 +267,7 @@ const FAQ: React.FC = () => {
               </p>
               <a
                 href="/contact"
-                className="inline-flex items-center px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-colors duration-200"
+                className="btn-primary inline-flex items-center px-6 py-3"
               >
                 <MessageCircle className="mr-2 w-5 h-5" />
                 Contact Us Instead
@@ -281,9 +288,9 @@ const FAQ: React.FC = () => {
                     className="w-full px-6 py-6 text-left flex items-center justify-between hover:bg-gray-50 transition-colors duration-200"
                   >
                     <div className="flex items-center space-x-4">
-                      <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <faq.icon className="w-5 h-5 text-primary-600" />
-                      </div>
+                                      <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                  <faq.icon className="w-6 h-6 text-white" />
+                </div>
                       <h3 className="text-lg font-semibold text-gray-900 pr-4">
                         {faq.question}
                       </h3>
@@ -377,7 +384,7 @@ const FAQ: React.FC = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
                 href="/contact"
-                className="inline-flex items-center justify-center px-8 py-4 bg-accent-500 hover:bg-accent-600 text-black font-semibold rounded-lg transition-all duration-200 transform hover:scale-105"
+                className="btn-primary text-lg px-8 py-4 inline-flex items-center justify-center group"
               >
                 <MessageCircle className="mr-2 w-5 h-5" />
                 Contact Us

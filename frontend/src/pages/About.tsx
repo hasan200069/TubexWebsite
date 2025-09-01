@@ -127,34 +127,41 @@ const About: React.FC = () => {
   return (
     <div className="overflow-hidden">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 text-white">
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
+      <section className="relative hero-gradient text-white overflow-hidden">
+        {/* Animated background elements */}
+        <div className="absolute inset-0 bg-gradient-to-r from-primary-950/80 to-secondary-950/80"></div>
+        <div className="absolute top-0 left-0 w-full h-full">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-primary-500/10 rounded-full blur-3xl animate-pulse-slow"></div>
+          <div className="absolute top-40 right-20 w-96 h-96 bg-secondary-500/10 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '1s'}}></div>
+          <div className="absolute bottom-20 left-1/4 w-64 h-64 bg-primary-400/10 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '2s'}}></div>
+        </div>
+        
+        <div className="relative max-w-7xl mx-auto container-padding py-24 lg:py-32">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.8 }}
             className="text-center"
           >
-            <h1 className="text-4xl lg:text-6xl font-bold leading-tight mb-6">
-              About <span className="text-accent-400">TubeX</span>
+            <h1 className="text-4xl lg:text-6xl font-black leading-tight mb-8 text-shadow-lg">
+              About <span className="text-gradient">Tubex Dubai</span>
             </h1>
-            <p className="text-xl text-primary-100 mb-8 max-w-4xl mx-auto leading-relaxed">
+            <p className="text-xl text-primary-100 mb-10 max-w-4xl mx-auto leading-relaxed">
               We are a passionate team of technology experts dedicated to transforming 
               businesses through innovative IT solutions. Since 2019, we've been helping 
-              companies of all sizes achieve their digital transformation goals.
+              companies across the UAE achieve their digital transformation goals.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <Link
                 to="/services"
-                className="inline-flex items-center justify-center px-8 py-4 bg-accent-500 hover:bg-accent-600 text-black font-semibold rounded-lg transition-all duration-200 transform hover:scale-105"
+                className="btn-primary text-lg px-8 py-4 inline-flex items-center justify-center group"
               >
                 Explore Our Services
-                <ArrowRight className="ml-2 w-5 h-5" />
+                <ArrowRight className="ml-3 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link
                 to="/contact"
-                className="inline-flex items-center justify-center px-8 py-4 border-2 border-white text-white hover:bg-white hover:text-primary-700 font-semibold rounded-lg transition-all duration-200"
+                className="glass text-white text-lg px-8 py-4 rounded-xl font-semibold inline-flex items-center justify-center hover:bg-white/20 transition-all duration-300 border border-white/30"
               >
                 Get In Touch
               </Link>
@@ -203,7 +210,7 @@ const About: React.FC = () => {
               viewport={{ once: true }}
               className="relative"
             >
-              <div className="bg-gradient-to-br from-primary-50 to-accent-50 rounded-2xl p-8">
+              <div className="bg-gradient-to-br from-primary-50 to-secondary-50 rounded-2xl p-8">
                 <div className="grid grid-cols-2 gap-6">
                   {stats.slice(0, 4).map((stat, index) => (
                     <div key={index} className="text-center">
@@ -308,8 +315,8 @@ const About: React.FC = () => {
                 viewport={{ once: true }}
                 className="bg-gray-50 rounded-xl p-8 hover:bg-white hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2"
               >
-                <div className="w-16 h-16 bg-primary-100 rounded-lg flex items-center justify-center mb-6">
-                  <value.icon className="w-8 h-8 text-primary-600" />
+                <div className="w-20 h-20 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                  <value.icon className="w-10 h-10 text-white" />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-4">
                   {value.title}
@@ -403,9 +410,9 @@ const About: React.FC = () => {
                 className="text-center"
               >
                 <div className="w-16 h-16 bg-white/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <stat.icon className="w-8 h-8 text-accent-400" />
+                  <stat.icon className="w-8 h-8 text-primary-300" />
                 </div>
-                <div className="text-4xl font-bold text-accent-400 mb-2">
+                <div className="text-4xl font-bold text-primary-300 mb-2">
                   {stat.number}
                 </div>
                 <div className="text-primary-100">

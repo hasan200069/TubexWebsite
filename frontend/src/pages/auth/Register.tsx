@@ -93,26 +93,30 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen hero-gradient flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 bg-gradient-to-r from-primary-950/80 to-secondary-950/80"></div>
+      <div className="absolute top-0 left-0 w-full h-full">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-primary-500/10 rounded-full blur-3xl animate-pulse-slow"></div>
+        <div className="absolute top-40 right-20 w-96 h-96 bg-secondary-500/10 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '1s'}}></div>
+        <div className="absolute bottom-20 left-1/4 w-64 h-64 bg-primary-400/10 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '2s'}}></div>
+      </div>
+      
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="sm:mx-auto sm:w-full sm:max-w-md"
+        className="sm:mx-auto sm:w-full sm:max-w-md relative z-10"
       >
-        <div className="flex justify-center">
-          <div className="w-12 h-12 bg-primary-600 rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-xl">T</span>
-          </div>
-        </div>
-        <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
+
+        <h2 className="mt-6 text-center text-3xl font-black text-white">
           Create your account
         </h2>
-        <p className="mt-2 text-center text-sm text-gray-600">
+        <p className="mt-2 text-center text-sm text-primary-100">
           Or{' '}
           <Link
             to="/login"
-            className="font-medium text-primary-600 hover:text-primary-500"
+            className="font-medium text-primary-200 hover:text-white transition-colors duration-200"
           >
             sign in to existing account
           </Link>
@@ -125,11 +129,11 @@ const Register: React.FC = () => {
         transition={{ duration: 0.6, delay: 0.1 }}
         className="mt-8 sm:mx-auto sm:w-full sm:max-w-md"
       >
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+        <div className="glass py-8 px-4 shadow-soft sm:rounded-2xl sm:px-10 border border-white/20">
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="firstName" className="block text-sm font-medium text-white">
                   First name
                 </label>
                 <div className="mt-1 relative">
@@ -151,7 +155,7 @@ const Register: React.FC = () => {
               </div>
 
               <div>
-                <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="lastName" className="block text-sm font-medium text-white">
                   Last name
                 </label>
                 <div className="mt-1 relative">
@@ -174,7 +178,7 @@ const Register: React.FC = () => {
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="email" className="block text-sm font-medium text-white">
                 Email address
               </label>
               <div className="mt-1 relative">
@@ -197,7 +201,7 @@ const Register: React.FC = () => {
             </div>
 
             <div>
-              <label htmlFor="company" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="company" className="block text-sm font-medium text-white">
                 Company (Optional)
               </label>
               <div className="mt-1 relative">
@@ -215,7 +219,7 @@ const Register: React.FC = () => {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="password" className="block text-sm font-medium text-white">
                 Password
               </label>
               <div className="mt-1 relative">
@@ -249,7 +253,7 @@ const Register: React.FC = () => {
             </div>
 
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-white">
                 Confirm Password
               </label>
               <div className="mt-1 relative">
@@ -302,13 +306,13 @@ const Register: React.FC = () => {
 
           <div className="mt-6">
             <div className="text-center">
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-primary-100">
                 By creating an account, you agree to our{' '}
-                <Link to="/terms" className="text-primary-600 hover:text-primary-500">
+                <Link to="/terms" className="text-primary-200 hover:text-white transition-colors duration-200">
                   Terms of Service
                 </Link>{' '}
                 and{' '}
-                <Link to="/privacy" className="text-primary-600 hover:text-primary-500">
+                <Link to="/privacy" className="text-primary-200 hover:text-white transition-colors duration-200">
                   Privacy Policy
                 </Link>
               </p>
