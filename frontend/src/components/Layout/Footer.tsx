@@ -48,30 +48,35 @@ const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Company Info */}
           <div className="lg:col-span-2">
-            <div className="flex items-center space-x-2 mb-4">
-              <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">T</span>
+            <div className="flex items-center space-x-3 mb-4">
+              <img 
+                src="/logo.png" 
+                alt="Tubex Dubai Logo" 
+                className="w-10 h-10 object-contain"
+              />
+              <div className="flex flex-col">
+                <span className="text-xl font-bold">Tubex Dubai</span>
+                <span className="text-sm text-gray-400">Technology Solutions</span>
               </div>
-              <span className="text-xl font-bold">TubeX</span>
             </div>
             <p className="text-gray-300 mb-6 max-w-md">
-              Your trusted partner for comprehensive IT services. We deliver innovative 
-              solutions that drive digital transformation and business growth.
+              Your trusted partner for comprehensive IT services in Dubai. We deliver innovative 
+              solutions that drive digital transformation and business growth across the UAE.
             </p>
             
             {/* Contact Info */}
             <div className="space-y-3">
               <div className="flex items-center space-x-3">
                 <Mail className="w-5 h-5 text-primary-400" />
-                <span className="text-gray-300">hello@tubex.com</span>
+                <span className="text-gray-300">hello@tubexdubai.com</span>
               </div>
               <div className="flex items-center space-x-3">
                 <Phone className="w-5 h-5 text-primary-400" />
-                <span className="text-gray-300">+1 (555) 123-4567</span>
+                <span className="text-gray-300">+971 4 123 4567</span>
               </div>
               <div className="flex items-center space-x-3">
                 <MapPin className="w-5 h-5 text-primary-400" />
-                <span className="text-gray-300">San Francisco, CA 94102</span>
+                <span className="text-gray-300">Dubai, UAE</span>
               </div>
             </div>
           </div>
@@ -155,7 +160,7 @@ const Footer: React.FC = () => {
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
             <div className="mb-4 lg:mb-0">
               <p className="text-gray-300">
-                © {currentYear} TubeX. All rights reserved.
+                © {currentYear} Tubex Dubai. All rights reserved.
               </p>
               <div className="flex space-x-6 mt-2">
                 {footerLinks.legal.map((link) => (
