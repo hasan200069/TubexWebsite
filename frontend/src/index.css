@@ -32,7 +32,7 @@
   }
 
   .btn-accent {
-    @apply bg-gradient-to-r from-secondary-500 to-secondary-600 hover:from-secondary-600 hover:to-secondary-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:ring-offset-2 shadow-medium hover:shadow-large transform hover:-translate-y-0.5;
+    @apply bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 shadow-medium hover:shadow-large transform hover:-translate-y-0.5;
   }
   
   .card {
@@ -60,11 +60,23 @@
   }
 
   .gradient-bg {
-    @apply bg-gradient-to-r from-primary-600 via-primary-700 to-secondary-600;
+    @apply bg-gradient-to-r from-deep-950 via-deep-800 to-deep-700;
   }
 
   .hero-gradient {
-    @apply bg-gradient-to-br from-primary-950 via-primary-900 to-secondary-900;
+    @apply bg-gradient-to-br from-deep-950 via-deep-900 to-deep-800;
+  }
+
+  .gradient-dark {
+    @apply bg-gradient-to-br from-deep-950 via-deep-800 to-deep-700;
+  }
+
+  .gradient-sophisticated {
+    @apply bg-gradient-to-br from-deep-950 via-deep-800 to-deep-700;
+  }
+
+  .gradient-blue {
+    @apply bg-gradient-to-br from-deep-950 via-deep-800 to-deep-600;
   }
 
   .section-padding {
@@ -79,8 +91,16 @@
     @apply bg-gradient-to-r from-primary-500 to-secondary-500 bg-clip-text text-transparent;
   }
 
+  .text-gradient-deep {
+    @apply bg-gradient-to-r from-deep-950 to-primary-500 bg-clip-text text-transparent;
+  }
+
   .border-gradient {
     @apply border border-transparent bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-border;
+  }
+
+  .border-gradient-deep {
+    @apply border border-transparent bg-gradient-to-r from-deep-950 to-primary-600 bg-clip-border;
   }
 }
 

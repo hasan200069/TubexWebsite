@@ -93,11 +93,11 @@ const Home: React.FC = () => {
       {/* Hero Section */}
       <section className="relative hero-gradient text-white overflow-hidden">
         {/* Animated background elements */}
-        <div className="absolute inset-0 bg-gradient-to-r from-primary-950/80 to-secondary-950/80"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-deep-950/80 to-deep-800/80"></div>
                  <div className="absolute top-0 left-0 w-full h-full">
-           <div className="absolute top-20 left-10 w-72 h-72 bg-primary-500/10 rounded-full blur-3xl animate-pulse-slow"></div>
-           <div className="absolute top-40 right-20 w-96 h-96 bg-secondary-500/10 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '1s'}}></div>
-           <div className="absolute bottom-20 left-1/4 w-64 h-64 bg-primary-400/10 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '2s'}}></div>
+           <div className="absolute top-20 left-10 w-72 h-72 bg-deep-600/10 rounded-full blur-3xl animate-pulse-slow"></div>
+           <div className="absolute top-40 right-20 w-96 h-96 bg-deep-500/10 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '1s'}}></div>
+           <div className="absolute bottom-20 left-1/4 w-64 h-64 bg-deep-400/10 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '2s'}}></div>
          </div>
         
         <div className="relative max-w-7xl mx-auto container-padding py-24 lg:py-32">
@@ -110,21 +110,21 @@ const Home: React.FC = () => {
               <div className="flex items-center space-x-4 mb-8">
                 <div className="relative">
                   <img 
-                    src="/logo.png" 
+                    src="/OnlyLogo-1.png" 
                     alt="Tubex Dubai Logo" 
                     className="w-16 h-16 object-contain drop-shadow-lg"
                   />
-                  <div className="absolute inset-0 bg-primary-500/20 rounded-full blur-xl"></div>
+                  <div className="absolute inset-0 bg-deep-500/20 rounded-full blur-xl"></div>
                 </div>
                 <div>
                   <h2 className="text-3xl font-bold text-white">Tubex Dubai</h2>
-                  <p className="text-primary-200 text-sm">Technology Solutions</p>
+                  <p className="text-deep-200 text-sm">Technology Solutions</p>
                 </div>
               </div>
               
                              <h1 className="text-5xl lg:text-7xl font-black leading-tight mb-8 text-shadow-lg">
                  Transform Your 
-                 <span className="block text-gradient bg-gradient-to-r from-primary-300 to-secondary-300">Business</span>
+                 <span className="block text-gradient-deep bg-gradient-to-r from-deep-300 to-deep-100">Business</span>
                  <span className="block text-white">with Premium IT</span>
                </h1>
               
@@ -166,10 +166,10 @@ const Home: React.FC = () => {
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ duration: 0.6, delay: 0.5 + index * 0.1 }}
                     >
-                                             <div className="text-4xl font-black text-primary-300 mb-3 drop-shadow-lg">
+                                                                                           <div className="text-4xl font-black text-deep-300 mb-3 drop-shadow-lg">
                          {stat.number}
                        </div>
-                      <div className="text-primary-200 text-sm font-medium">
+                      <div className="text-deep-200 text-sm font-medium">
                         {stat.label}
                       </div>
                     </motion.div>
@@ -361,11 +361,11 @@ const Home: React.FC = () => {
       )}
 
       {/* CTA Section */}
-      <section className="section-padding gradient-bg text-white relative overflow-hidden">
+      <section className="section-padding gradient-sophisticated text-white relative overflow-hidden">
         {/* Background elements */}
-        <div className="absolute inset-0 bg-gradient-to-r from-primary-950/50 to-secondary-950/50"></div>
-                 <div className="absolute top-0 right-0 w-96 h-96 bg-secondary-500/10 rounded-full blur-3xl"></div>
-         <div className="absolute bottom-0 left-0 w-80 h-80 bg-primary-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-deep-950/50 to-deep-800/50"></div>
+                 <div className="absolute top-0 right-0 w-96 h-96 bg-deep-500/10 rounded-full blur-3xl"></div>
+         <div className="absolute bottom-0 left-0 w-80 h-80 bg-deep-400/10 rounded-full blur-3xl"></div>
         
         <div className="relative max-w-7xl mx-auto container-padding text-center">
           <motion.div
@@ -375,9 +375,9 @@ const Home: React.FC = () => {
             viewport={{ once: true }}
           >
                          <h2 className="text-4xl lg:text-6xl font-black mb-8 text-shadow-lg">
-               Ready to Transform Your <span className="text-primary-300">Business?</span>
+               Ready to Transform Your <span className="text-deep-300">Business?</span>
              </h2>
-            <p className="text-xl text-primary-100 mb-12 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl text-deep-100 mb-12 max-w-3xl mx-auto leading-relaxed">
               Join hundreds of satisfied clients across the UAE who have revolutionized their 
               operations with our expert IT services and cutting-edge solutions.
             </p>

@@ -108,11 +108,11 @@ const Contact: React.FC = () => {
       {/* Hero Section */}
       <section className="relative hero-gradient text-white overflow-hidden">
         {/* Animated background elements */}
-        <div className="absolute inset-0 bg-gradient-to-r from-primary-950/80 to-secondary-950/80"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-deep-950/80 to-deep-800/80"></div>
         <div className="absolute top-0 left-0 w-full h-full">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-primary-500/10 rounded-full blur-3xl animate-pulse-slow"></div>
-          <div className="absolute top-40 right-20 w-96 h-96 bg-secondary-500/10 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '1s'}}></div>
-          <div className="absolute bottom-20 left-1/4 w-64 h-64 bg-primary-400/10 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '2s'}}></div>
+          <div className="absolute top-20 left-10 w-72 h-72 bg-deep-600/10 rounded-full blur-3xl animate-pulse-slow"></div>
+          <div className="absolute top-40 right-20 w-96 h-96 bg-deep-500/10 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '1s'}}></div>
+          <div className="absolute bottom-20 left-1/4 w-64 h-64 bg-deep-400/10 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '2s'}}></div>
         </div>
         
         <div className="relative max-w-7xl mx-auto container-padding py-24 lg:py-32">
@@ -123,9 +123,9 @@ const Contact: React.FC = () => {
             className="text-center"
           >
             <h1 className="text-4xl lg:text-6xl font-black leading-tight mb-8 text-shadow-lg">
-              Get In <span className="text-gradient">Touch</span>
+              Get In <span className="text-gradient-deep">Touch</span>
             </h1>
-            <p className="text-xl text-primary-100 mb-10 max-w-4xl mx-auto leading-relaxed">
+            <p className="text-xl text-deep-100 mb-10 max-w-4xl mx-auto leading-relaxed">
               Ready to transform your business with smart IT solutions? Our team of experts 
               in Dubai is here to help you harness the power of technology for growth, 
               efficiency, and innovation.
@@ -179,7 +179,7 @@ const Contact: React.FC = () => {
                 viewport={{ once: true }}
                 className="bg-gray-50 rounded-xl p-8 hover:bg-white hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2 text-center"
               >
-                <div className="w-20 h-20 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-8 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                <div className="w-20 h-20 bg-gradient-to-br from-deep-500 to-deep-600 rounded-2xl flex items-center justify-center mx-auto mb-8 group-hover:scale-110 transition-transform duration-300 shadow-lg">
                   <info.icon className="w-10 h-10 text-white" />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">
@@ -190,12 +190,12 @@ const Contact: React.FC = () => {
                     href={info.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-primary-600 hover:text-primary-700 font-medium mb-3 block"
+                    className="text-deep-600 hover:text-deep-700 font-medium mb-3 block"
                   >
                     {info.details}
                   </a>
                 ) : (
-                  <p className="text-primary-600 font-medium mb-3">
+                  <p className="text-deep-600 font-medium mb-3">
                     {info.details}
                   </p>
                 )}

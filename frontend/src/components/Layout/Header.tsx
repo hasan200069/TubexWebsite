@@ -46,7 +46,7 @@ const Header: React.FC = () => {
           <div className="flex items-center">
             <Link to="/" className="flex items-center space-x-3">
               <img 
-                src="/logo.png" 
+                src="/OnlyLogo-1.png" 
                 alt="Tubex Dubai Logo" 
                 className="w-10 h-10 object-contain"
               />

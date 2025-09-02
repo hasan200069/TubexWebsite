@@ -129,11 +129,11 @@ const About: React.FC = () => {
       {/* Hero Section */}
       <section className="relative hero-gradient text-white overflow-hidden">
         {/* Animated background elements */}
-        <div className="absolute inset-0 bg-gradient-to-r from-primary-950/80 to-secondary-950/80"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-deep-950/80 to-deep-800/80"></div>
         <div className="absolute top-0 left-0 w-full h-full">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-primary-500/10 rounded-full blur-3xl animate-pulse-slow"></div>
-          <div className="absolute top-40 right-20 w-96 h-96 bg-secondary-500/10 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '1s'}}></div>
-          <div className="absolute bottom-20 left-1/4 w-64 h-64 bg-primary-400/10 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '2s'}}></div>
+          <div className="absolute top-20 left-10 w-72 h-72 bg-deep-600/10 rounded-full blur-3xl animate-pulse-slow"></div>
+          <div className="absolute top-40 right-20 w-96 h-96 bg-deep-500/10 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '1s'}}></div>
+          <div className="absolute bottom-20 left-1/4 w-64 h-64 bg-deep-400/10 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '2s'}}></div>
         </div>
         
         <div className="relative max-w-7xl mx-auto container-padding py-24 lg:py-32">
@@ -144,9 +144,9 @@ const About: React.FC = () => {
             className="text-center"
           >
             <h1 className="text-4xl lg:text-6xl font-black leading-tight mb-8 text-shadow-lg">
-              About <span className="text-gradient">Tubex Dubai</span>
+              About <span className="text-gradient-deep">Tubex Dubai</span>
             </h1>
-            <p className="text-xl text-primary-100 mb-10 max-w-4xl mx-auto leading-relaxed">
+            <p className="text-xl text-deep-100 mb-10 max-w-4xl mx-auto leading-relaxed">
               We are a passionate team of technology experts dedicated to transforming 
               businesses through innovative IT solutions. Since 2019, we've been helping 
               companies across the UAE achieve their digital transformation goals.
@@ -185,7 +185,7 @@ const About: React.FC = () => {
               </h2>
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-xl font-semibold text-primary-600 mb-3">Our Mission</h3>
+                  <h3 className="text-xl font-semibold text-deep-600 mb-3">Our Mission</h3>
                   <p className="text-gray-600 leading-relaxed">
                     To empower businesses with cutting-edge technology solutions that drive 
                     growth, efficiency, and innovation. We believe technology should be an 
@@ -193,7 +193,7 @@ const About: React.FC = () => {
                   </p>
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-primary-600 mb-3">Our Vision</h3>
+                  <h3 className="text-xl font-semibold text-deep-600 mb-3">Our Vision</h3>
                   <p className="text-gray-600 leading-relaxed">
                     To be the world's most trusted partner for digital transformation, 
                     recognized for our innovation, reliability, and commitment to client success. 

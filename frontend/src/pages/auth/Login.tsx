@@ -56,11 +56,11 @@ const Login: React.FC = () => {
   return (
     <div className="min-h-screen hero-gradient flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
       {/* Animated background elements */}
-      <div className="absolute inset-0 bg-gradient-to-r from-primary-950/80 to-secondary-950/80"></div>
+      <div className="absolute inset-0 bg-gradient-to-r from-deep-950/80 to-deep-800/80"></div>
       <div className="absolute top-0 left-0 w-full h-full">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-primary-500/10 rounded-full blur-3xl animate-pulse-slow"></div>
-        <div className="absolute top-40 right-20 w-96 h-96 bg-secondary-500/10 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '1s'}}></div>
-        <div className="absolute bottom-20 left-1/4 w-64 h-64 bg-primary-400/10 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '2s'}}></div>
+        <div className="absolute top-20 left-10 w-72 h-72 bg-deep-600/10 rounded-full blur-3xl animate-pulse-slow"></div>
+        <div className="absolute top-40 right-20 w-96 h-96 bg-deep-500/10 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '1s'}}></div>
+        <div className="absolute bottom-20 left-1/4 w-64 h-64 bg-deep-400/10 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '2s'}}></div>
       </div>
       
       <motion.div
@@ -73,11 +73,11 @@ const Login: React.FC = () => {
         <h2 className="mt-6 text-center text-3xl font-black text-white">
           Sign in to your account
         </h2>
-        <p className="mt-2 text-center text-sm text-primary-100">
+                    <p className="mt-2 text-center text-sm text-deep-100">
           Or{' '}
           <Link
             to="/register"
-            className="font-medium text-primary-200 hover:text-white transition-colors duration-200"
+                            className="font-medium text-deep-200 hover:text-white transition-colors duration-200"
           >
             create a new account
           </Link>
@@ -149,7 +149,7 @@ const Login: React.FC = () => {
                   id="remember-me"
                   name="remember-me"
                   type="checkbox"
-                  className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                  className="h-4 w-4 text-deep-600 focus:ring-deep-500 border-gray-300 rounded"
                 />
                 <label htmlFor="remember-me" className="ml-2 block text-sm text-white">
                   Remember me
@@ -159,7 +159,7 @@ const Login: React.FC = () => {
               <div className="text-sm">
                 <Link
                   to="/forgot-password"
-                  className="font-medium text-primary-200 hover:text-white transition-colors duration-200"
+                  className="font-medium text-deep-200 hover:text-white transition-colors duration-200"
                 >
                   Forgot your password?
                 </Link>

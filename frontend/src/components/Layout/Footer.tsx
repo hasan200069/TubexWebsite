@@ -43,14 +43,14 @@ const Footer: React.FC = () => {
   ];
 
   return (
-    <footer className="bg-gray-900 text-white">
+    <footer className="bg-deep-950 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Company Info */}
           <div className="lg:col-span-2">
             <div className="flex items-center space-x-3 mb-4">
               <img 
-                src="/logo.png" 
+                src="/OnlyLogo-1.png" 
                 alt="Tubex Dubai Logo" 
                 className="w-10 h-10 object-contain"
               />
@@ -67,15 +67,15 @@ const Footer: React.FC = () => {
             {/* Contact Info */}
             <div className="space-y-3">
               <div className="flex items-center space-x-3">
-                <Mail className="w-5 h-5 text-primary-400" />
+                <Mail className="w-5 h-5 text-deep-400" />
                 <span className="text-gray-300">hello@tubexdubai.com</span>
               </div>
               <div className="flex items-center space-x-3">
-                <Phone className="w-5 h-5 text-primary-400" />
+                <Phone className="w-5 h-5 text-deep-400" />
                 <span className="text-gray-300">+971 4 123 4567</span>
               </div>
               <div className="flex items-center space-x-3">
-                <MapPin className="w-5 h-5 text-primary-400" />
+                <MapPin className="w-5 h-5 text-deep-400" />
                 <span className="text-gray-300">Dubai, UAE</span>
               </div>
             </div>
@@ -89,7 +89,7 @@ const Footer: React.FC = () => {
                 <li key={link.name}>
                   <Link
                     to={link.href}
-                    className="text-gray-300 hover:text-primary-400 transition-colors duration-200"
+                    className="text-gray-300 hover:text-deep-400 transition-colors duration-200"
                   >
                     {link.name}
                   </Link>
@@ -106,7 +106,7 @@ const Footer: React.FC = () => {
                 <li key={link.name}>
                   <Link
                     to={link.href}
-                    className="text-gray-300 hover:text-primary-400 transition-colors duration-200"
+                    className="text-gray-300 hover:text-deep-400 transition-colors duration-200"
                   >
                     {link.name}
                   </Link>
@@ -123,7 +123,7 @@ const Footer: React.FC = () => {
                 <li key={link.name}>
                   <Link
                     to={link.href}
-                    className="text-gray-300 hover:text-primary-400 transition-colors duration-200"
+                    className="text-gray-300 hover:text-deep-400 transition-colors duration-200"
                   >
                     {link.name}
                   </Link>
@@ -146,7 +146,7 @@ const Footer: React.FC = () => {
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="flex-1 px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-white placeholder-gray-400"
+                className="flex-1 px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-deep-500 focus:border-transparent text-white placeholder-gray-400"
               />
               <button className="btn-primary whitespace-nowrap">
                 Subscribe
@@ -167,7 +167,7 @@ const Footer: React.FC = () => {
                   <Link
                     key={link.name}
                     to={link.href}
-                    className="text-sm text-gray-400 hover:text-primary-400 transition-colors duration-200"
+                    className="text-sm text-gray-400 hover:text-deep-400 transition-colors duration-200"
                   >
                     {link.name}
                   </Link>
@@ -181,7 +181,7 @@ const Footer: React.FC = () => {
                 <a
                   key={social.name}
                   href={social.href}
-                  className="p-2 bg-gray-800 rounded-lg hover:bg-primary-600 transition-colors duration-200"
+                  className="p-2 bg-gray-800 rounded-lg hover:bg-deep-600 transition-colors duration-200"
                   aria-label={social.name}
                 >
                   <social.icon className="w-5 h-5" />

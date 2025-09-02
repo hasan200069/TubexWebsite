@@ -161,7 +161,7 @@ const Payment: React.FC = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-deep-600"></div>
       </div>
     );
   }
@@ -173,7 +173,7 @@ const Payment: React.FC = () => {
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Order Not Found</h2>
           <button
             onClick={() => navigate('/client/orders')}
-            className="text-primary-600 hover:text-primary-700 font-medium"
+                            className="text-deep-600 hover:text-deep-700 font-medium"
           >
             Back to Orders
           </button>
@@ -214,7 +214,7 @@ const Payment: React.FC = () => {
               className="bg-white rounded-lg shadow-sm border p-6"
             >
               <div className="flex items-center space-x-2 mb-6">
-                <CreditCard className="w-6 h-6 text-primary-600" />
+                <CreditCard className="w-6 h-6 text-deep-600" />
                 <h1 className="text-2xl font-bold text-gray-900">Payment Details</h1>
               </div>
 
@@ -230,12 +230,12 @@ const Payment: React.FC = () => {
                       onClick={() => setPaymentForm(prev => ({ ...prev, paymentMethod: 'stripe' }))}
                       className={`p-4 border-2 rounded-lg text-left transition-colors ${
                         paymentForm.paymentMethod === 'stripe'
-                          ? 'border-primary-500 bg-primary-50'
+                          ? 'border-deep-500 bg-deep-50'
                           : 'border-gray-200 hover:border-gray-300'
                       }`}
                     >
                       <div className="flex items-center space-x-3">
-                        <CreditCard className="w-6 h-6 text-primary-600" />
+                        <CreditCard className="w-6 h-6 text-deep-600" />
                         <div>
                           <div className="font-medium">Credit Card</div>
                           <div className="text-sm text-gray-600">Visa, Mastercard, Amex</div>
@@ -248,7 +248,7 @@ const Payment: React.FC = () => {
                       onClick={() => setPaymentForm(prev => ({ ...prev, paymentMethod: 'paypal' }))}
                       className={`p-4 border-2 rounded-lg text-left transition-colors ${
                         paymentForm.paymentMethod === 'paypal'
-                          ? 'border-primary-500 bg-primary-50'
+                          ? 'border-deep-500 bg-deep-50'
                           : 'border-gray-200 hover:border-gray-300'
                       }`}
                     >
@@ -455,7 +455,7 @@ const Payment: React.FC = () => {
                 <button
                   type="submit"
                   disabled={processing}
-                  className="w-full bg-primary-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-primary-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+                                      className="w-full bg-deep-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-deep-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
                 >
                   {processing ? (
                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
@@ -503,7 +503,7 @@ const Payment: React.FC = () => {
                 <div className="border-t border-gray-200 pt-4">
                   <div className="flex items-center justify-between">
                     <span className="text-lg font-bold text-gray-900">Total</span>
-                    <span className="text-lg font-bold text-primary-600">
+                    <span className="text-lg font-bold text-deep-600">
                       ${order.totalAmount.toFixed(2)}
                     </span>
                   </div>

@@ -193,11 +193,11 @@ const FAQ: React.FC = () => {
       {/* Hero Section */}
       <section className="relative hero-gradient text-white overflow-hidden">
         {/* Animated background elements */}
-        <div className="absolute inset-0 bg-gradient-to-r from-primary-950/80 to-secondary-950/80"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-deep-950/80 to-deep-800/80"></div>
         <div className="absolute top-0 left-0 w-full h-full">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-primary-500/10 rounded-full blur-3xl animate-pulse-slow"></div>
-          <div className="absolute top-40 right-20 w-96 h-96 bg-secondary-500/10 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '1s'}}></div>
-          <div className="absolute bottom-20 left-1/4 w-64 h-64 bg-primary-400/10 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '2s'}}></div>
+          <div className="absolute top-20 left-10 w-72 h-72 bg-deep-600/10 rounded-full blur-3xl animate-pulse-slow"></div>
+          <div className="absolute top-40 right-20 w-96 h-96 bg-deep-500/10 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '1s'}}></div>
+          <div className="absolute bottom-20 left-1/4 w-64 h-64 bg-deep-400/10 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '2s'}}></div>
         </div>
         
         <div className="relative max-w-7xl mx-auto container-padding py-24 lg:py-32">
@@ -208,9 +208,9 @@ const FAQ: React.FC = () => {
             className="text-center"
           >
             <h1 className="text-4xl lg:text-6xl font-black leading-tight mb-8 text-shadow-lg">
-              Frequently Asked <span className="text-gradient">Questions</span>
+              Frequently Asked <span className="text-gradient-deep">Questions</span>
             </h1>
-            <p className="text-xl text-primary-100 mb-10 max-w-4xl mx-auto leading-relaxed">
+            <p className="text-xl text-deep-100 mb-10 max-w-4xl mx-auto leading-relaxed">
               Find answers to common questions about our IT services, processes, and solutions. 
               Can't find what you're looking for? Contact us directly.
             </p>
@@ -242,7 +242,7 @@ const FAQ: React.FC = () => {
                   onClick={() => setSelectedCategory(category.id)}
                   className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-200 ${
                     selectedCategory === category.id
-                      ? 'bg-primary-600 text-white'
+                      ? 'bg-deep-600 text-white'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
@@ -288,7 +288,7 @@ const FAQ: React.FC = () => {
                     className="w-full px-6 py-6 text-left flex items-center justify-between hover:bg-gray-50 transition-colors duration-200"
                   >
                     <div className="flex items-center space-x-4">
-                                      <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                                      <div className="w-12 h-12 bg-gradient-to-br from-deep-500 to-deep-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
                   <faq.icon className="w-6 h-6 text-white" />
                 </div>
                       <h3 className="text-lg font-semibold text-gray-900 pr-4">

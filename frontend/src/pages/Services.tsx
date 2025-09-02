@@ -129,7 +129,7 @@ const Services: React.FC = () => {
   if (loading && services.length === 0) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-deep-600"></div>
       </div>
     );
   }
@@ -139,11 +139,11 @@ const Services: React.FC = () => {
       {/* Hero Section */}
       <section className="relative hero-gradient text-white overflow-hidden">
         {/* Animated background elements */}
-        <div className="absolute inset-0 bg-gradient-to-r from-primary-950/80 to-secondary-950/80"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-deep-950/80 to-deep-800/80"></div>
         <div className="absolute top-0 left-0 w-full h-full">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-primary-500/10 rounded-full blur-3xl animate-pulse-slow"></div>
-          <div className="absolute top-40 right-20 w-96 h-96 bg-secondary-500/10 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '1s'}}></div>
-          <div className="absolute bottom-20 left-1/4 w-64 h-64 bg-primary-400/10 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '2s'}}></div>
+          <div className="absolute top-20 left-10 w-72 h-72 bg-deep-600/10 rounded-full blur-3xl animate-pulse-slow"></div>
+          <div className="absolute top-40 right-20 w-96 h-96 bg-deep-500/10 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '1s'}}></div>
+          <div className="absolute bottom-20 left-1/4 w-64 h-64 bg-deep-400/10 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '2s'}}></div>
         </div>
         
         <div className="relative max-w-7xl mx-auto container-padding py-20 lg:py-24">
@@ -153,13 +153,13 @@ const Services: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               className="text-4xl lg:text-6xl font-black mb-6 text-shadow-lg"
             >
-              Our <span className="text-gradient">IT Services</span>
+              Our <span className="text-gradient-deep">IT Services</span>
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-xl text-primary-100 max-w-3xl mx-auto leading-relaxed"
+              className="text-xl text-deep-100 max-w-3xl mx-auto leading-relaxed"
             >
               Comprehensive technology solutions to accelerate your business growth and digital transformation across the UAE
             </motion.p>
@@ -190,13 +190,13 @@ const Services: React.FC = () => {
               <div className="flex items-center space-x-2">
                 <button
                   onClick={() => setViewMode('grid')}
-                  className={`p-2 rounded ${viewMode === 'grid' ? 'bg-primary-100 text-primary-600' : 'text-gray-400'}`}
+                  className={`p-2 rounded ${viewMode === 'grid' ? 'bg-deep-100 text-deep-600' : 'text-gray-400'}`}
                 >
                   <Grid3X3 className="w-5 h-5" />
                 </button>
                 <button
                   onClick={() => setViewMode('list')}
-                  className={`p-2 rounded ${viewMode === 'list' ? 'bg-primary-100 text-primary-600' : 'text-gray-400'}`}
+                  className={`p-2 rounded ${viewMode === 'list' ? 'bg-deep-100 text-deep-600' : 'text-gray-400'}`}
                 >
                   <List className="w-5 h-5" />
                 </button>
