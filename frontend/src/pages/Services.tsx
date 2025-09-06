@@ -169,58 +169,100 @@ const Services: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Search and Filters */}
-        <div className="card p-6 mb-8">
+        <motion.div 
+          className="card p-6 mb-8"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+        >
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             {/* Search */}
-            <form onSubmit={handleSearch} className="flex-1 max-w-md">
+            <motion.form 
+              onSubmit={handleSearch} 
+              className="flex-1 max-w-md"
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              viewport={{ once: true }}
+            >
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
+                <motion.div
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                </motion.div>
+                <motion.input
                   type="text"
                   placeholder="Search services..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="input-field w-full pl-10 pr-4"
+                  whileFocus={{ scale: 1.02, boxShadow: "0 0 0 3px rgba(234, 179, 8, 0.1)" }}
+                  transition={{ type: "spring", stiffness: 300 }}
                 />
               </div>
-            </form>
+            </motion.form>
 
             {/* View Toggle & Sort */}
-            <div className="flex items-center space-x-4">
+            <motion.div 
+              className="flex items-center space-x-4"
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+            >
               <div className="flex items-center space-x-2">
-                <button
+                <motion.button
                   onClick={() => setViewMode('grid')}
-                  className={`p-2 rounded ${viewMode === 'grid' ? 'bg-deep-100 text-deep-600' : 'text-gray-400'}`}
+                  className={`p-2 rounded transition-all duration-300 ${viewMode === 'grid' ? 'bg-deep-100 text-deep-600' : 'text-gray-400 hover:text-deep-600'}`}
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  whileTap={{ scale: 0.9 }}
+                  transition={{ type: "spring", stiffness: 300 }}
                 >
                   <Grid3X3 className="w-5 h-5" />
-                </button>
-                <button
+                </motion.button>
+                <motion.button
                   onClick={() => setViewMode('list')}
-                  className={`p-2 rounded ${viewMode === 'list' ? 'bg-deep-100 text-deep-600' : 'text-gray-400'}`}
+                  className={`p-2 rounded transition-all duration-300 ${viewMode === 'list' ? 'bg-deep-100 text-deep-600' : 'text-gray-400 hover:text-deep-600'}`}
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  whileTap={{ scale: 0.9 }}
+                  transition={{ type: "spring", stiffness: 300 }}
                 >
                   <List className="w-5 h-5" />
-                </button>
+                </motion.button>
               </div>
 
-              <select
+              <motion.select
                 value={sortBy}
                 onChange={(e) => handleSortChange(e.target.value)}
                 className="input-field"
+                whileFocus={{ scale: 1.02, boxShadow: "0 0 0 3px rgba(234, 179, 8, 0.1)" }}
+                transition={{ type: "spring", stiffness: 300 }}
               >
                 <option value="newest">Newest First</option>
                 <option value="price_asc">Price: Low to High</option>
                 <option value="price_desc">Price: High to Low</option>
                 <option value="rating">Highest Rated</option>
-              </select>
+              </motion.select>
 
-              <button
+              <motion.button
                 onClick={() => setShowFilters(!showFilters)}
-                className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+                className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-all duration-300"
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 300 }}
               >
-                <SlidersHorizontal className="w-4 h-4" />
+                <motion.div
+                  animate={{ rotate: showFilters ? 180 : 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <SlidersHorizontal className="w-4 h-4" />
+                </motion.div>
                 <span>Filters</span>
-              </button>
-            </div>
+              </motion.button>
+            </motion.div>
           </div>
 
           {/* Filters Panel */}
@@ -279,15 +321,26 @@ const Services: React.FC = () => {
               </div>
             </motion.div>
           )}
-        </div>
+        </motion.div>
 
         {/* Results Info */}
-        <div className="flex justify-between items-center mb-6">
-          <p className="text-gray-600">
+        <motion.div 
+          className="flex justify-between items-center mb-6"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
+        >
+          <motion.p 
+            className="text-gray-600"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
             {totalServices} service{totalServices !== 1 ? 's' : ''} found
             {selectedCategory && ` in "${selectedCategory}"`}
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
 
         {/* Services Grid/List */}
         {services.length > 0 ? (
@@ -299,9 +352,20 @@ const Services: React.FC = () => {
             {services.map((service, index) => (
               <motion.div
                 key={service._id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
+                initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ 
+                  duration: 0.6, 
+                  delay: index * 0.1,
+                  type: "spring",
+                  stiffness: 100
+                }}
+                viewport={{ once: true }}
+                whileHover={{ 
+                  y: -8, 
+                  scale: 1.02,
+                  transition: { type: "spring", stiffness: 300 }
+                }}
                 className={`card-hover overflow-hidden ${
                   viewMode === 'list' ? 'flex' : ''
                 }`}
@@ -381,13 +445,21 @@ const Services: React.FC = () => {
                         'Custom Quote'
                       )}
                     </div>
-                    <Link
-                      to={`/services/${service._id}`}
-                      className="flex items-center space-x-1 text-primary-600 hover:text-primary-700 font-medium"
-                    >
-                      <span>Learn More</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </Link>
+                    <motion.div whileHover={{ x: 5 }} transition={{ type: "spring", stiffness: 300 }}>
+                      <Link
+                        to={`/services/${service._id}`}
+                        className="flex items-center space-x-1 text-primary-600 hover:text-primary-700 font-medium group"
+                      >
+                        <span>Learn More</span>
+                        <motion.div
+                          animate={{ x: 0 }}
+                          whileHover={{ x: 3 }}
+                          transition={{ type: "spring", stiffness: 300 }}
+                        >
+                          <ArrowRight className="w-4 h-4" />
+                        </motion.div>
+                      </Link>
+                    </motion.div>
                   </div>
                 </div>
               </motion.div>

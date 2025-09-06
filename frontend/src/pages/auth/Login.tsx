@@ -92,12 +92,17 @@ const Login: React.FC = () => {
       >
         <div className="glass py-8 px-4 shadow-soft sm:rounded-2xl sm:px-10 border border-white/20">
           <form className="space-y-6" onSubmit={handleSubmit}>
-            <div>
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              viewport={{ once: true }}
+            >
               <label htmlFor="email" className="block text-sm font-medium text-white">
                 Email address
               </label>
               <div className="mt-1 relative">
-                <input
+                <motion.input
                   id="email"
                   name="email"
                   type="email"
@@ -107,17 +112,29 @@ const Login: React.FC = () => {
                   onChange={handleChange}
                   className="input-field pl-10"
                   placeholder="Enter your email"
+                  whileFocus={{ scale: 1.02, boxShadow: "0 0 0 3px rgba(234, 179, 8, 0.1)" }}
+                  transition={{ type: "spring", stiffness: 300 }}
                 />
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <motion.div
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                </motion.div>
               </div>
-            </div>
+            </motion.div>
 
-            <div>
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              viewport={{ once: true }}
+            >
               <label htmlFor="password" className="block text-sm font-medium text-white">
                 Password
               </label>
               <div className="mt-1 relative">
-                <input
+                <motion.input
                   id="password"
                   name="password"
                   type={showPassword ? 'text' : 'password'}
@@ -127,21 +144,36 @@ const Login: React.FC = () => {
                   onChange={handleChange}
                   className="input-field pl-10 pr-10"
                   placeholder="Enter your password"
+                  whileFocus={{ scale: 1.02, boxShadow: "0 0 0 3px rgba(234, 179, 8, 0.1)" }}
+                  transition={{ type: "spring", stiffness: 300 }}
                 />
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <button
+                <motion.div
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                </motion.div>
+                <motion.button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  transition={{ type: "spring", stiffness: 300 }}
                 >
-                  {showPassword ? (
-                    <EyeOff className="w-5 h-5 text-gray-400" />
-                  ) : (
-                    <Eye className="w-5 h-5 text-gray-400" />
-                  )}
-                </button>
+                  <motion.div
+                    animate={{ rotate: showPassword ? 180 : 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="w-5 h-5 text-gray-400" />
+                    ) : (
+                      <Eye className="w-5 h-5 text-gray-400" />
+                    )}
+                  </motion.div>
+                </motion.button>
               </div>
-            </div>
+            </motion.div>
 
             <div className="flex items-center justify-between">
               <div className="flex items-center">
@@ -166,22 +198,34 @@ const Login: React.FC = () => {
               </div>
             </div>
 
-            <div>
-              <button
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              viewport={{ once: true }}
+            >
+              <motion.button
                 type="submit"
                 disabled={isLoading}
                 className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                whileHover={{ scale: 1.02, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ type: "spring", stiffness: 300 }}
               >
                 {isLoading ? (
                   <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    <motion.div 
+                      className="rounded-full h-4 w-4 border-b-2 border-white mr-2"
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                    />
                     Signing in...
                   </>
                 ) : (
                   'Sign in'
                 )}
-              </button>
-            </div>
+              </motion.button>
+            </motion.div>
           </form>
 
                       <div className="mt-6">

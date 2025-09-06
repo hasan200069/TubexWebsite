@@ -229,11 +229,16 @@ const Contact: React.FC = () => {
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid md:grid-cols-2 gap-6">
-                    <div>
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: 0.1 }}
+                      viewport={{ once: true }}
+                    >
                       <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
                         Full Name *
                       </label>
-                      <input
+                      <motion.input
                         type="text"
                         id="name"
                         name="name"
@@ -242,13 +247,20 @@ const Contact: React.FC = () => {
                         required
                         className="input-field w-full"
                         placeholder="Your full name"
+                        whileFocus={{ scale: 1.02, boxShadow: "0 0 0 3px rgba(234, 179, 8, 0.1)" }}
+                        transition={{ type: "spring", stiffness: 300 }}
                       />
-                    </div>
-                    <div>
+                    </motion.div>
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: 0.2 }}
+                      viewport={{ once: true }}
+                    >
                       <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
                         Email Address *
                       </label>
-                      <input
+                      <motion.input
                         type="email"
                         id="email"
                         name="email"
@@ -257,8 +269,10 @@ const Contact: React.FC = () => {
                         required
                         className="input-field w-full"
                         placeholder="your.email@company.com"
+                        whileFocus={{ scale: 1.02, boxShadow: "0 0 0 3px rgba(234, 179, 8, 0.1)" }}
+                        transition={{ type: "spring", stiffness: 300 }}
                       />
-                    </div>
+                    </motion.div>
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-6">
@@ -358,23 +372,35 @@ const Contact: React.FC = () => {
                     </div>
                   )}
 
-                  <button
+                  <motion.button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-primary-600 hover:bg-primary-700 disabled:bg-gray-400 text-white font-semibold py-4 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 disabled:transform-none flex items-center justify-center space-x-2"
+                    className="w-full bg-primary-600 hover:bg-primary-700 disabled:bg-gray-400 text-white font-semibold py-4 px-6 rounded-lg transition-all duration-200 flex items-center justify-center space-x-2"
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ type: "spring", stiffness: 300 }}
                   >
                     {isSubmitting ? (
                       <>
-                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        <motion.div 
+                          className="w-5 h-5 border-2 border-white border-t-transparent rounded-full"
+                          animate={{ rotate: 360 }}
+                          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                        />
                         <span>Sending...</span>
                       </>
                     ) : (
                       <>
-                        <Send className="w-5 h-5" />
+                        <motion.div
+                          whileHover={{ x: 2 }}
+                          transition={{ type: "spring", stiffness: 300 }}
+                        >
+                          <Send className="w-5 h-5" />
+                        </motion.div>
                         <span>Send Message</span>
                       </>
                     )}
-                  </button>
+                  </motion.button>
                 </form>
               </div>
             </motion.div>
