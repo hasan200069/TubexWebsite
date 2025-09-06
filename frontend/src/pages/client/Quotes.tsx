@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 import { 
   Plus, 
   Search, 
-  Filter, 
   Eye, 
   Edit, 
   Trash2, 
@@ -14,14 +13,10 @@ import {
   AlertCircle,
   DollarSign,
   Calendar,
-  User,
-  FileText,
-  MessageCircle,
-  Download
+  FileText
 } from 'lucide-react';
 import api from '../../config/api';
 import toast from 'react-hot-toast';
-import { useAuth } from '../../contexts/AuthContext';
 import Sidebar from '../../components/Layout/Sidebar';
 
 interface Quote {
@@ -52,7 +47,6 @@ interface Quote {
 
 const Quotes: React.FC = () => {
   const navigate = useNavigate();
-  const { state } = useAuth();
   const [quotes, setQuotes] = useState<Quote[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
