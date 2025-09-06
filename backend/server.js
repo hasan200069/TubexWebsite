@@ -3,18 +3,9 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const http = require('http');
-const socketIo = require('socket.io');
 require('dotenv').config();
 
 const app = express();
-const server = http.createServer(app);
-const io = socketIo(server, {
-  cors: {
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
-    methods: ["GET", "POST"]
-  }
-});
 
 // Middleware
 app.use(helmet());
@@ -45,36 +36,6 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/tubex', {
   console.log('📚 Setup guide: https://docs.mongodb.com/manual/installation/');
 });
 
-// Socket.IO connection handling
-io.on('connection', (socket) => {
-  console.log('👤 User connected:', socket.id);
-
-  // Join user to their specific room
-  socket.on('join', (userId) => {
-    socket.join(userId);
-    console.log(`User ${userId} joined room`);
-  });
-
-  // Handle private messages
-  socket.on('private_message', (data) => {
-    const { recipientId, message, senderId } = data;
-    io.to(recipientId).emit('private_message', {
-      message,
-      senderId,
-      timestamp: new Date()
-    });
-  });
-
-  // Handle support chat
-  socket.on('support_message', (data) => {
-    // Broadcast to all admin users
-    socket.broadcast.emit('support_message', data);
-  });
-
-  socket.on('disconnect', () => {
-    console.log('👤 User disconnected:', socket.id);
-  });
-});
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));
@@ -82,7 +43,6 @@ app.use('/api/services', require('./routes/services'));
 app.use('/api/orders', require('./routes/orders'));
 app.use('/api/quotes', require('./routes/quotes'));
 app.use('/api/payments', require('./routes/payments'));
-app.use('/api/chat', require('./routes/chat'));
 app.use('/api/admin', require('./routes/admin'));
 
 // Health check endpoint
@@ -109,10 +69,10 @@ app.use('*', (req, res) => {
 });
 
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => {
+app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📱 Frontend URL: ${process.env.FRONTEND_URL || 'http://localhost:3000'}`);
   console.log(`💾 Database: ${process.env.MONGODB_URI || 'mongodb://localhost:27017/tubex'}`);
 });
 
-module.exports = { app, io };
+module.exports = app;

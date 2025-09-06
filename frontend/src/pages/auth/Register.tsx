@@ -73,7 +73,7 @@ const Register: React.FC = () => {
         company: formData.company,
         phone: formData.phone,
       });
-      navigate('/dashboard');
+      navigate('/client/dashboard');
     } catch (error: any) {
       console.error('Registration error:', error);
       // Error handling is done in the AuthContext

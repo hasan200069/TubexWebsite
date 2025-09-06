@@ -6,10 +6,10 @@ const { auth } = require('../middleware/auth');
 
 const router = express.Router();
 
-// @route   POST /api/payments/create-payment-intent
-// @desc    Create payment intent for order
+// @route   POST /api/payments/create-payment-method
+// @desc    Create payment method for order
 // @access  Private
-router.post('/create-payment-intent', [auth, [
+router.post('/create-payment-method', [auth, [
   body('orderId')
     .isMongoId()
     .withMessage('Valid order ID is required')
@@ -35,6 +35,7 @@ router.post('/create-payment-intent', [auth, [
       return res.status(404).json({ message: 'Order not found or not eligible for payment' });
     }
 
+    // Create payment intent
     const paymentIntent = await stripe.paymentIntents.create({
       amount: Math.round(order.totalAmount * 100), // Convert to cents
       currency: 'usd',
@@ -122,18 +123,15 @@ router.post('/confirm-payment', [auth, [
 });
 
 // @route   POST /api/payments/process
-// @desc    Process payment for an order (simplified version)
+// @desc    Process payment for an order using Stripe
 // @access  Private (Client)
 router.post('/process', [auth, [
   body('orderId')
     .isMongoId()
     .withMessage('Valid order ID is required'),
-  body('amount')
-    .isFloat({ min: 0.01 })
-    .withMessage('Amount must be greater than 0'),
-  body('paymentMethod')
-    .isIn(['stripe', 'paypal'])
-    .withMessage('Valid payment method is required')
+  body('paymentMethodId')
+    .isString()
+    .withMessage('Payment method ID is required')
 ]], async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -144,12 +142,12 @@ router.post('/process', [auth, [
       });
     }
 
-    const { orderId, amount, paymentMethod } = req.body;
+    const { orderId, paymentMethodId } = req.body;
 
     // Get order details
     const order = await Order.findById(orderId)
       .populate('serviceId', 'title pricing')
-      .populate('client', 'name email');
+      .populate('client', 'firstName lastName email');
 
     if (!order) {
       return res.status(404).json({
@@ -172,45 +170,77 @@ router.post('/process', [auth, [
       });
     }
 
-    if (order.totalAmount !== amount) {
-      return res.status(400).json({
+    // Create payment intent with Stripe
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: Math.round(order.totalAmount * 100), // Convert to cents
+      currency: 'usd',
+      payment_method: paymentMethodId,
+      confirmation_method: 'manual',
+      confirm: true,
+      metadata: {
+        orderId: order._id.toString(),
+        clientId: req.user.id.toString(),
+        serviceTitle: order.serviceId.title
+      }
+    });
+
+    if (paymentIntent.status === 'succeeded') {
+      // Payment successful
+      order.status = 'payment_confirmed';
+      order.payment = {
+        status: 'completed',
+        method: 'stripe',
+        transactionId: paymentIntent.charges.data[0]?.id,
+        paidAt: new Date(),
+        stripePaymentIntentId: paymentIntent.id,
+        stripeChargeId: paymentIntent.charges.data[0]?.id
+      };
+
+      await order.save();
+
+      res.json({
+        success: true,
+        message: 'Payment processed successfully',
+        payment: {
+          id: paymentIntent.id,
+          amount: order.totalAmount,
+          currency: 'USD',
+          status: 'succeeded'
+        },
+        order
+      });
+    } else if (paymentIntent.status === 'requires_action') {
+      // Payment requires additional action (3D Secure, etc.)
+      res.json({
         success: false,
-        message: 'Payment amount does not match order total'
+        requires_action: true,
+        payment_intent: {
+          id: paymentIntent.id,
+          client_secret: paymentIntent.client_secret
+        }
+      });
+    } else {
+      // Payment failed
+      res.status(400).json({
+        success: false,
+        message: 'Payment failed',
+        error: paymentIntent.last_payment_error?.message || 'Payment could not be processed'
       });
     }
-
-    // Simulate successful payment
-    const paymentResult = {
-      success: true,
-      transactionId: `txn_${Date.now()}`,
-      amount: order.totalAmount,
-      currency: 'USD',
-      paymentMethod: paymentMethod
-    };
-
-    // Update order status
-    order.status = 'payment_confirmed';
-    order.payment = {
-      status: 'completed',
-      method: paymentMethod,
-      transactionId: paymentResult.transactionId,
-      paidAt: new Date()
-    };
-
-    await order.save();
-
-    res.json({
-      success: true,
-      message: 'Payment processed successfully',
-      payment: paymentResult,
-      order
-    });
   } catch (error) {
     console.error('Payment processing error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Payment processing failed'
-    });
+    
+    if (error.type === 'StripeCardError') {
+      res.status(400).json({
+        success: false,
+        message: error.message
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: 'Payment processing failed'
+      });
+    }
   }
 });
 

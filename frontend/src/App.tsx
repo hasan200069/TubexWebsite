@@ -12,11 +12,16 @@ import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import Dashboard from './pages/client/Dashboard';
 import Orders from './pages/client/Orders';
+import OrderView from './pages/client/OrderView';
 import Payment from './pages/client/Payment';
-import Chat from './pages/client/Chat';
+import Quotes from './pages/client/Quotes';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminServices from './pages/admin/AdminServices';
-import AdminChat from './pages/admin/AdminChat';
+import ManageOrders from './pages/admin/ManageOrders';
+import AdminOrderView from './pages/admin/AdminOrderView';
+import AdminQuotes from './pages/admin/AdminQuotes';
+import AdminQuoteView from './pages/admin/AdminQuoteView';
+import QuoteView from './pages/client/QuoteView';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
 function App() {
@@ -37,7 +42,7 @@ function App() {
             
             {/* Client Routes */}
             <Route
-              path="dashboard"
+              path="client/dashboard"
               element={
                 <ProtectedRoute requiredRole="client">
                   <Dashboard />
@@ -45,7 +50,7 @@ function App() {
               }
             />
             <Route
-              path="orders"
+              path="client/orders"
               element={
                 <ProtectedRoute requiredRole="client">
                   <Orders />
@@ -53,7 +58,15 @@ function App() {
               }
             />
             <Route
-              path="orders/:orderId/payment"
+              path="client/orders/:orderId"
+              element={
+                <ProtectedRoute requiredRole="client">
+                  <OrderView />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="client/orders/:orderId/payment"
               element={
                 <ProtectedRoute requiredRole="client">
                   <Payment />
@@ -61,14 +74,21 @@ function App() {
               }
             />
             <Route
-              path="chat"
+              path="client/quotes"
               element={
                 <ProtectedRoute requiredRole="client">
-                  <Chat />
+                  <Quotes />
                 </ProtectedRoute>
               }
             />
-            
+            <Route
+              path="client/quotes/:quoteId"
+              element={
+                <ProtectedRoute requiredRole="client">
+                  <QuoteView />
+                </ProtectedRoute>
+              }
+            />
             {/* Admin Routes */}
             <Route
               path="admin"
@@ -87,10 +107,34 @@ function App() {
               }
             />
             <Route
-              path="admin/chat"
+              path="admin/orders"
               element={
                 <ProtectedRoute requiredRole="admin">
-                  <AdminChat />
+                  <ManageOrders />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="admin/orders/:orderId"
+              element={
+                <ProtectedRoute requiredRole="admin">
+                  <AdminOrderView />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="admin/quotes"
+              element={
+                <ProtectedRoute requiredRole="admin">
+                  <AdminQuotes />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="admin/quotes/:quoteId"
+              element={
+                <ProtectedRoute requiredRole="admin">
+                  <AdminQuoteView />
                 </ProtectedRoute>
               }
             />

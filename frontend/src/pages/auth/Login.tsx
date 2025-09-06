@@ -20,7 +20,7 @@ const Login: React.FC = () => {
   React.useEffect(() => {
     if (state.isAuthenticated) {
       const from = location.state?.from?.pathname || 
-        (state.user?.role === 'admin' ? '/admin' : '/dashboard');
+        (state.user?.role === 'admin' ? '/admin' : '/client/dashboard');
       navigate(from, { replace: true });
     }
   }, [state.isAuthenticated, navigate, location, state.user?.role]);
@@ -32,7 +32,7 @@ const Login: React.FC = () => {
     try {
       await login(formData.email, formData.password);
       const from = location.state?.from?.pathname || 
-        (state.user?.role === 'admin' ? '/admin' : '/dashboard');
+        (state.user?.role === 'admin' ? '/admin' : '/client/dashboard');
       navigate(from, { replace: true });
     } catch (error) {
       // Error handling is done in the AuthContext

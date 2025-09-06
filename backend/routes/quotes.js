@@ -133,4 +133,216 @@ router.post('/', [auth, [
   }
 });
 
+// @route   GET /api/quotes/:id
+// @desc    Get single quote by ID
+// @access  Private
+router.get('/:id', auth, async (req, res) => {
+  try {
+    const quote = await Quote.findById(req.params.id)
+      .populate('client', 'firstName lastName email phone company')
+      .populate('serviceId', 'title description category pricing')
+      .populate('communication.from', 'firstName lastName')
+      .lean();
+
+    if (!quote) {
+      return res.status(404).json({ message: 'Quote not found' });
+    }
+
+    // Check if user has access to this quote
+    if (req.user.role === 'client' && quote.client._id.toString() !== req.user.id) {
+      return res.status(403).json({ message: 'Access denied' });
+    }
+
+    res.json({ quote });
+  } catch (error) {
+    console.error('Get quote error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// @route   PUT /api/quotes/:id/respond
+// @desc    Admin respond to quote
+// @access  Private (Admin)
+router.put('/:id/respond', [adminAuth, [
+  body('quotedAmount')
+    .isFloat({ min: 0 })
+    .withMessage('Valid quoted amount is required'),
+  body('response')
+    .trim()
+    .isLength({ min: 1, max: 2000 })
+    .withMessage('Response must be between 1 and 2000 characters'),
+  body('status')
+    .isIn(['accepted', 'rejected'])
+    .withMessage('Status must be accepted or rejected')
+]], async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        message: 'Validation failed',
+        errors: errors.array()
+      });
+    }
+
+    const { quotedAmount, response, status } = req.body;
+
+    const quote = await Quote.findById(req.params.id);
+    if (!quote) {
+      return res.status(404).json({ message: 'Quote not found' });
+    }
+
+    if (quote.status !== 'pending') {
+      return res.status(400).json({ message: 'Quote has already been responded to' });
+    }
+
+    quote.quotedAmount = quotedAmount;
+    quote.adminResponse = response;
+    quote.status = status;
+    quote.respondedAt = new Date();
+
+    await quote.save();
+
+    res.json({
+      success: true,
+      message: `Quote ${status} successfully`,
+      quote
+    });
+  } catch (error) {
+    console.error('Respond to quote error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// @route   POST /api/quotes/:id/communication
+// @desc    Add communication message to quote
+// @access  Private
+router.post('/:id/communication', [auth, [
+  body('message')
+    .trim()
+    .isLength({ min: 1, max: 2000 })
+    .withMessage('Message must be between 1 and 2000 characters'),
+  body('isInternal')
+    .optional()
+    .isBoolean()
+    .withMessage('isInternal must be a boolean')
+]], async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        message: 'Validation failed',
+        errors: errors.array()
+      });
+    }
+
+    const { message, isInternal = false } = req.body;
+
+    const quote = await Quote.findById(req.params.id);
+    if (!quote) {
+      return res.status(404).json({ message: 'Quote not found' });
+    }
+
+    // Check if user has access to this quote
+    if (req.user.role === 'client' && quote.client.toString() !== req.user.id) {
+      return res.status(403).json({ message: 'Access denied' });
+    }
+
+    // Only admins can send internal messages
+    if (isInternal && req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Only admins can send internal messages' });
+    }
+
+    quote.communication.push({
+      from: req.user.id,
+      message,
+      isInternal,
+      timestamp: new Date()
+    });
+
+    await quote.save();
+
+    // Populate the from field for response
+    await quote.populate('communication.from', 'firstName lastName');
+
+    res.json({
+      success: true,
+      message: 'Message sent successfully',
+      communication: quote.communication[quote.communication.length - 1]
+    });
+  } catch (error) {
+    console.error('Add communication error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// @route   PUT /api/quotes/:id/accept
+// @desc    Client accept quote
+// @access  Private (Client)
+router.put('/:id/accept', auth, async (req, res) => {
+  try {
+    if (req.user.role !== 'client') {
+      return res.status(403).json({ message: 'Only clients can accept quotes' });
+    }
+
+    const quote = await Quote.findById(req.params.id);
+    if (!quote) {
+      return res.status(404).json({ message: 'Quote not found' });
+    }
+
+    if (quote.client.toString() !== req.user.id) {
+      return res.status(403).json({ message: 'Access denied' });
+    }
+
+    if (quote.status !== 'accepted') {
+      return res.status(400).json({ message: 'Quote is not in accepted status' });
+    }
+
+    // Quote is already accepted by admin, client just acknowledges
+    res.json({
+      success: true,
+      message: 'Quote accepted successfully',
+      quote
+    });
+  } catch (error) {
+    console.error('Accept quote error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// @route   PUT /api/quotes/:id/reject
+// @desc    Client reject quote
+// @access  Private (Client)
+router.put('/:id/reject', auth, async (req, res) => {
+  try {
+    if (req.user.role !== 'client') {
+      return res.status(403).json({ message: 'Only clients can reject quotes' });
+    }
+
+    const quote = await Quote.findById(req.params.id);
+    if (!quote) {
+      return res.status(404).json({ message: 'Quote not found' });
+    }
+
+    if (quote.client.toString() !== req.user.id) {
+      return res.status(403).json({ message: 'Access denied' });
+    }
+
+    if (quote.status !== 'accepted') {
+      return res.status(400).json({ message: 'Quote is not in accepted status' });
+    }
+
+    quote.status = 'rejected';
+    await quote.save();
+
+    res.json({
+      success: true,
+      message: 'Quote rejected successfully',
+      quote
+    });
+  } catch (error) {
+    console.error('Reject quote error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 module.exports = router;

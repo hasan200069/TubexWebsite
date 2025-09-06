@@ -28,7 +28,7 @@ router.get('/', auth, async (req, res) => {
     const [orders, total] = await Promise.all([
       Order.find(query)
         .populate('client', 'firstName lastName email company')
-        .populate('service', 'title category pricing')
+        .populate('serviceId', 'title category pricing')
         .populate('assignedTo', 'firstName lastName')
         .sort({ createdAt: -1 })
         .skip(skip)
@@ -64,7 +64,7 @@ router.get('/:id', auth, async (req, res) => {
 
     const order = await Order.findOne(query)
       .populate('client', 'firstName lastName email company phone')
-      .populate('service')
+      .populate('serviceId')
       .populate('assignedTo', 'firstName lastName email')
       .populate('communication.from', 'firstName lastName role');
 
@@ -171,7 +171,7 @@ router.post('/', [auth, [
 
     await order.save();
     await order.populate([
-      { path: 'client', select: 'name email' },
+      { path: 'client', select: 'firstName lastName email' },
       { path: 'serviceId', select: 'title description pricing category' }
     ]);
 
@@ -185,14 +185,137 @@ router.post('/', [auth, [
   }
 });
 
+// @route   PUT /api/orders/:id/approve
+// @desc    Approve order (Admin only)
+// @access  Private (Admin)
+router.put('/:id/approve', [adminAuth, [
+  body('adminNotes')
+    .optional()
+    .trim()
+    .isLength({ max: 1000 })
+    .withMessage('Admin notes must be less than 1000 characters')
+]], async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        message: 'Validation failed',
+        errors: errors.array()
+      });
+    }
+
+    const { adminNotes } = req.body;
+
+    const order = await Order.findById(req.params.id);
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+
+    if (order.status !== 'payment_confirmed') {
+      return res.status(400).json({ 
+        message: 'Order must be payment confirmed before approval' 
+      });
+    }
+
+    order.status = 'approved';
+    order.approvedBy = req.user.id;
+    order.approvedAt = new Date();
+    if (adminNotes) {
+      order.adminNotes = adminNotes;
+    }
+
+    // Add communication entry for approval
+    order.communication.push({
+      from: req.user.id,
+      message: `Order approved by admin. ${adminNotes || ''}`,
+      isInternal: false
+    });
+
+    await order.save();
+    await order.populate([
+      { path: 'client', select: 'firstName lastName email' },
+      { path: 'serviceId', select: 'title category' },
+      { path: 'approvedBy', select: 'firstName lastName' }
+    ]);
+
+    res.json({
+      message: 'Order approved successfully',
+      order
+    });
+  } catch (error) {
+    console.error('Approve order error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// @route   PUT /api/orders/:id/reject
+// @desc    Reject order (Admin only)
+// @access  Private (Admin)
+router.put('/:id/reject', [adminAuth, [
+  body('rejectionReason')
+    .trim()
+    .isLength({ min: 10, max: 500 })
+    .withMessage('Rejection reason must be between 10 and 500 characters')
+]], async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        message: 'Validation failed',
+        errors: errors.array()
+      });
+    }
+
+    const { rejectionReason } = req.body;
+
+    const order = await Order.findById(req.params.id);
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+
+    if (order.status === 'completed' || order.status === 'cancelled') {
+      return res.status(400).json({ 
+        message: 'Cannot reject completed or cancelled order' 
+      });
+    }
+
+    order.status = 'rejected';
+    order.rejectedBy = req.user.id;
+    order.rejectedAt = new Date();
+    order.rejectionReason = rejectionReason;
+
+    // Add communication entry for rejection
+    order.communication.push({
+      from: req.user.id,
+      message: `Order rejected by admin. Reason: ${rejectionReason}`,
+      isInternal: false
+    });
+
+    await order.save();
+    await order.populate([
+      { path: 'client', select: 'firstName lastName email' },
+      { path: 'serviceId', select: 'title category' },
+      { path: 'rejectedBy', select: 'firstName lastName' }
+    ]);
+
+    res.json({
+      message: 'Order rejected successfully',
+      order
+    });
+  } catch (error) {
+    console.error('Reject order error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 // @route   PUT /api/orders/:id/status
 // @desc    Update order status (Admin only)
 // @access  Private (Admin)
 router.put('/:id/status', [adminAuth, [
   body('status')
     .isIn([
-      'pending_payment', 'payment_confirmed', 'in_progress',
-      'under_review', 'completed', 'cancelled', 'refunded'
+      'pending', 'payment_confirmed', 'approved', 'rejected',
+      'in_progress', 'under_review', 'completed', 'cancelled', 'refunded'
     ])
     .withMessage('Invalid status'),
   body('notes')
@@ -231,7 +354,7 @@ router.put('/:id/status', [adminAuth, [
     await order.save();
     await order.populate([
       { path: 'client', select: 'firstName lastName email' },
-      { path: 'service', select: 'title category' }
+      { path: 'serviceId', select: 'title category' }
     ]);
 
     res.json({
@@ -240,6 +363,65 @@ router.put('/:id/status', [adminAuth, [
     });
   } catch (error) {
     console.error('Update order status error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// @route   POST /api/orders/:id/communication
+// @desc    Add communication message to order
+// @access  Private
+router.post('/:id/communication', [auth, [
+  body('message')
+    .trim()
+    .isLength({ min: 1, max: 2000 })
+    .withMessage('Message must be between 1 and 2000 characters'),
+  body('isInternal')
+    .optional()
+    .isBoolean()
+    .withMessage('isInternal must be a boolean')
+]], async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        message: 'Validation failed',
+        errors: errors.array()
+      });
+    }
+
+    const { message, isInternal = false } = req.body;
+
+    const order = await Order.findById(req.params.id);
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+
+    // Check if user has access to this order
+    if (req.user.role === 'client' && order.client.toString() !== req.user.id) {
+      return res.status(403).json({ message: 'Not authorized to access this order' });
+    }
+
+    // Add communication entry
+    order.communication.push({
+      from: req.user.id,
+      message,
+      isInternal,
+      timestamp: new Date()
+    });
+
+    await order.save();
+
+    // Populate the from field for response
+    await order.populate('communication.from', 'firstName lastName role');
+
+    const newMessage = order.communication[order.communication.length - 1];
+
+    res.status(201).json({
+      message: 'Communication added successfully',
+      communication: newMessage
+    });
+  } catch (error) {
+    console.error('Add communication error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });

@@ -36,6 +36,8 @@ const orderSchema = new mongoose.Schema({
     enum: [
       'pending',
       'payment_confirmed', 
+      'approved',
+      'rejected',
       'in_progress',
       'under_review',
       'completed',
@@ -98,9 +100,23 @@ const orderSchema = new mongoose.Schema({
     stripePaymentIntentId: String,
     stripeChargeId: String
   },
-  requirements: {
+  adminNotes: {
     type: String,
-    maxlength: 5000
+    maxlength: 1000
+  },
+  approvedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  approvedAt: Date,
+  rejectedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  rejectedAt: Date,
+  rejectionReason: {
+    type: String,
+    maxlength: 500
   },
   deliverables: [{
     title: String,

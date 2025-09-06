@@ -10,9 +10,14 @@ import {
   Clock,
   User
 } from 'lucide-react';
+import { loadStripe } from '@stripe/stripe-js';
+import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import api from '../../config/api';
 import toast from 'react-hot-toast';
 import { useAuth } from '../../contexts/AuthContext';
+import Sidebar from '../../components/Layout/Sidebar';
+
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY || 'pk_test_51234567890abcdefghijklmnopqrstuvwxyz');
 
 interface Order {
   _id: string;
@@ -30,17 +35,23 @@ interface Order {
   totalAmount: number;
   status: string;
   requirements: string;
-  timeline: string;
+  timeline: {
+    estimatedDelivery?: string;
+    actualDelivery?: string;
+    milestones?: Array<{
+      title: string;
+      description: string;
+      dueDate: string;
+      completedAt?: string;
+      status: 'pending' | 'in_progress' | 'completed';
+    }>;
+  };
   contactPreference: string;
   additionalNotes: string;
   createdAt: string;
 }
 
 interface PaymentFormData {
-  paymentMethod: 'stripe' | 'paypal';
-  cardNumber: string;
-  expiryDate: string;
-  cvv: string;
   cardholderName: string;
   billingAddress: {
     street: string;
@@ -51,20 +62,13 @@ interface PaymentFormData {
   };
 }
 
-const Payment: React.FC = () => {
-  const { orderId } = useParams<{ orderId: string }>();
+const PaymentForm: React.FC<{ order: Order; user: any }> = ({ order, user }) => {
   const navigate = useNavigate();
-  const { state } = useAuth();
-  const user = state.user;
-  const [order, setOrder] = useState<Order | null>(null);
-  const [loading, setLoading] = useState(true);
+  const stripe = useStripe();
+  const elements = useElements();
   const [processing, setProcessing] = useState(false);
 
   const [paymentForm, setPaymentForm] = useState<PaymentFormData>({
-    paymentMethod: 'stripe',
-    cardNumber: '',
-    expiryDate: '',
-    cvv: '',
     cardholderName: '',
     billingAddress: {
       street: '',
@@ -75,56 +79,73 @@ const Payment: React.FC = () => {
     }
   });
 
-  const fetchOrder = useCallback(async () => {
-    try {
-      setLoading(true);
-      const response = await api.get(`/orders/${orderId}`);
-      setOrder(response.data.order);
-    } catch (error) {
-      console.error('Error fetching order:', error);
-      toast.error('Failed to load order details');
-      navigate('/client/orders');
-    } finally {
-      setLoading(false);
-    }
-  }, [orderId, navigate]);
-
-  useEffect(() => {
-    if (orderId) {
-      fetchOrder();
-    }
-  }, [orderId, fetchOrder]);
 
   const handlePaymentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!order) return;
+    console.log('Payment form submitted');
+    console.log('Stripe available:', !!stripe);
+    console.log('Elements available:', !!elements);
+    console.log('Order available:', !!order);
+    
+    if (!stripe || !elements || !order) {
+      console.error('Missing required dependencies for payment');
+      return;
+    }
 
     try {
       setProcessing(true);
 
-      const paymentData = {
-        orderId: order._id,
-        amount: order.totalAmount,
-        paymentMethod: paymentForm.paymentMethod,
-        ...(paymentForm.paymentMethod === 'stripe' && {
-          cardDetails: {
-            number: paymentForm.cardNumber,
-            expiry: paymentForm.expiryDate,
-            cvv: paymentForm.cvv,
-            name: paymentForm.cardholderName
-          },
-          billingAddress: paymentForm.billingAddress
-        })
-      };
+      const cardElement = elements.getElement(CardElement);
+      if (!cardElement) {
+        toast.error('Card element not found');
+        return;
+      }
 
-      const response = await api.post('/payments/process', paymentData);
+      // Create payment method
+      const { error: pmError, paymentMethod } = await stripe.createPaymentMethod({
+        type: 'card',
+        card: cardElement,
+        billing_details: {
+          name: paymentForm.cardholderName,
+          address: {
+            line1: paymentForm.billingAddress.street,
+            city: paymentForm.billingAddress.city,
+            state: paymentForm.billingAddress.state,
+            postal_code: paymentForm.billingAddress.zipCode,
+            country: paymentForm.billingAddress.country,
+          },
+        },
+      });
+
+      if (pmError) {
+        toast.error(pmError.message || 'Payment method creation failed');
+        return;
+      }
+
+      // Process payment
+      const response = await api.post('/payments/process', {
+        orderId: order._id,
+        paymentMethodId: paymentMethod.id
+      });
       
       if (response.data.success) {
         toast.success('Payment successful! Your order has been confirmed.');
         navigate('/client/orders');
+      } else if (response.data.requires_action) {
+        // Handle 3D Secure authentication
+        const { error: confirmError } = await stripe.confirmCardPayment(
+          response.data.payment_intent.client_secret
+        );
+
+        if (confirmError) {
+          toast.error(confirmError.message || 'Payment confirmation failed');
+        } else {
+          toast.success('Payment successful! Your order has been confirmed.');
+          navigate('/client/orders');
+        }
       } else {
-        toast.error('Payment failed. Please try again.');
+        toast.error(response.data.message || 'Payment failed. Please try again.');
       }
     } catch (error: any) {
       console.error('Payment error:', error);
@@ -135,76 +156,39 @@ const Payment: React.FC = () => {
     }
   };
 
-  const formatCardNumber = (value: string) => {
-    const v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
-    const matches = v.match(/\d{4,16}/g);
-    const match = (matches && matches[0]) || '';
-    const parts = [];
-    for (let i = 0, len = match.length; i < len; i += 4) {
-      parts.push(match.substring(i, i + 4));
-    }
-    if (parts.length) {
-      return parts.join(' ');
-    } else {
-      return v;
-    }
+  const cardElementOptions = {
+    style: {
+      base: {
+        fontSize: '16px',
+        color: '#424770',
+        '::placeholder': {
+          color: '#aab7c4',
+        },
+      },
+      invalid: {
+        color: '#9e2146',
+      },
+    },
   };
 
-  const formatExpiryDate = (value: string) => {
-    const v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
-    if (v.length >= 2) {
-      return v.substring(0, 2) + '/' + v.substring(2, 4);
-    }
-    return v;
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-deep-600"></div>
-      </div>
-    );
-  }
-
-  if (!order) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Order Not Found</h2>
-          <button
-            onClick={() => navigate('/client/orders')}
-                            className="text-deep-600 hover:text-deep-700 font-medium"
-          >
-            Back to Orders
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <button
-              onClick={() => navigate('/client/orders')}
-              className="flex items-center space-x-2 text-gray-600 hover:text-gray-900"
-            >
-              <ArrowLeft className="w-5 h-5" />
-              <span>Back to Orders</span>
-            </button>
-            
-            <div className="flex items-center space-x-2 text-sm text-gray-600">
-              <Shield className="w-4 h-4" />
-              <span>Secure Payment</span>
-            </div>
+    <Sidebar>
+      <div className="p-6">
+        <div className="flex items-center justify-between mb-6">
+          <button
+            onClick={() => navigate('/client/orders')}
+            className="flex items-center space-x-2 text-gray-600 hover:text-gray-900"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            <span>Back to Orders</span>
+          </button>
+          
+          <div className="flex items-center space-x-2 text-sm text-gray-600">
+            <Shield className="w-4 h-4" />
+            <span>Secure Payment</span>
           </div>
         </div>
-      </div>
-
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Payment Form */}
           <div className="lg:col-span-2">
@@ -214,248 +198,137 @@ const Payment: React.FC = () => {
               className="bg-white rounded-lg shadow-sm border p-6"
             >
               <div className="flex items-center space-x-2 mb-6">
-                <CreditCard className="w-6 h-6 text-deep-600" />
+                <CreditCard className="w-6 h-6 text-primary-600" />
                 <h1 className="text-2xl font-bold text-gray-900">Payment Details</h1>
               </div>
 
               <form onSubmit={handlePaymentSubmit} className="space-y-6">
-                {/* Payment Method */}
+                {/* Card Details */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-3">
-                    Payment Method
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Card Information *
                   </label>
-                  <div className="grid grid-cols-2 gap-4">
-                    <button
-                      type="button"
-                      onClick={() => setPaymentForm(prev => ({ ...prev, paymentMethod: 'stripe' }))}
-                      className={`p-4 border-2 rounded-lg text-left transition-colors ${
-                        paymentForm.paymentMethod === 'stripe'
-                          ? 'border-deep-500 bg-deep-50'
-                          : 'border-gray-200 hover:border-gray-300'
-                      }`}
-                    >
-                      <div className="flex items-center space-x-3">
-                        <CreditCard className="w-6 h-6 text-deep-600" />
-                        <div>
-                          <div className="font-medium">Credit Card</div>
-                          <div className="text-sm text-gray-600">Visa, Mastercard, Amex</div>
-                        </div>
-                      </div>
-                    </button>
-                    
-                    <button
-                      type="button"
-                      onClick={() => setPaymentForm(prev => ({ ...prev, paymentMethod: 'paypal' }))}
-                      className={`p-4 border-2 rounded-lg text-left transition-colors ${
-                        paymentForm.paymentMethod === 'paypal'
-                          ? 'border-deep-500 bg-deep-50'
-                          : 'border-gray-200 hover:border-gray-300'
-                      }`}
-                    >
-                      <div className="flex items-center space-x-3">
-                        <div className="w-6 h-6 bg-blue-600 rounded flex items-center justify-center">
-                          <span className="text-white text-xs font-bold">PP</span>
-                        </div>
-                        <div>
-                          <div className="font-medium">PayPal</div>
-                          <div className="text-sm text-gray-600">Pay with PayPal</div>
-                        </div>
-                      </div>
-                    </button>
+                  <div className="p-4 border border-gray-300 rounded-lg">
+                    <CardElement options={cardElementOptions} />
                   </div>
                 </div>
 
-                {/* Card Details */}
-                {paymentForm.paymentMethod === 'stripe' && (
-                  <>
-                    {/* Card Number */}
+                {/* Cardholder Name */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Cardholder Name *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={paymentForm.cardholderName}
+                    onChange={(e) => setPaymentForm(prev => ({ ...prev, cardholderName: e.target.value }))}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    placeholder="John Doe"
+                  />
+                </div>
+
+                {/* Billing Address */}
+                <div>
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Billing Address</h3>
+                  <div className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Card Number *
+                        Street Address *
                       </label>
                       <input
                         type="text"
                         required
-                        maxLength={19}
-                        value={paymentForm.cardNumber}
+                        value={paymentForm.billingAddress.street}
                         onChange={(e) => setPaymentForm(prev => ({ 
                           ...prev, 
-                          cardNumber: formatCardNumber(e.target.value) 
+                          billingAddress: { ...prev.billingAddress, street: e.target.value }
                         }))}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                        placeholder="1234 5678 9012 3456"
+                        placeholder="123 Main St"
                       />
                     </div>
-
-                    {/* Expiry and CVV */}
+                    
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Expiry Date *
+                          City *
                         </label>
                         <input
                           type="text"
                           required
-                          maxLength={5}
-                          value={paymentForm.expiryDate}
+                          value={paymentForm.billingAddress.city}
                           onChange={(e) => setPaymentForm(prev => ({ 
                             ...prev, 
-                            expiryDate: formatExpiryDate(e.target.value) 
+                            billingAddress: { ...prev.billingAddress, city: e.target.value }
                           }))}
                           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                          placeholder="MM/YY"
+                          placeholder="New York"
                         />
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          CVV *
+                          State *
                         </label>
                         <input
                           type="text"
                           required
-                          maxLength={4}
-                          value={paymentForm.cvv}
+                          value={paymentForm.billingAddress.state}
                           onChange={(e) => setPaymentForm(prev => ({ 
                             ...prev, 
-                            cvv: e.target.value.replace(/\D/g, '') 
+                            billingAddress: { ...prev.billingAddress, state: e.target.value }
                           }))}
                           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                          placeholder="123"
+                          placeholder="NY"
                         />
                       </div>
                     </div>
-
-                    {/* Cardholder Name */}
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Cardholder Name *
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={paymentForm.cardholderName}
-                        onChange={(e) => setPaymentForm(prev => ({ ...prev, cardholderName: e.target.value }))}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                        placeholder="John Doe"
-                      />
-                    </div>
-
-                    {/* Billing Address */}
-                    <div>
-                      <h3 className="text-lg font-medium text-gray-900 mb-4">Billing Address</h3>
-                      <div className="space-y-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Street Address *
-                          </label>
-                          <input
-                            type="text"
-                            required
-                            value={paymentForm.billingAddress.street}
-                            onChange={(e) => setPaymentForm(prev => ({ 
-                              ...prev, 
-                              billingAddress: { ...prev.billingAddress, street: e.target.value }
-                            }))}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                            placeholder="123 Main St"
-                          />
-                        </div>
-                        
-                        <div className="grid grid-cols-2 gap-4">
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              City *
-                            </label>
-                            <input
-                              type="text"
-                              required
-                              value={paymentForm.billingAddress.city}
-                              onChange={(e) => setPaymentForm(prev => ({ 
-                                ...prev, 
-                                billingAddress: { ...prev.billingAddress, city: e.target.value }
-                              }))}
-                              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                              placeholder="New York"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              State *
-                            </label>
-                            <input
-                              type="text"
-                              required
-                              value={paymentForm.billingAddress.state}
-                              onChange={(e) => setPaymentForm(prev => ({ 
-                                ...prev, 
-                                billingAddress: { ...prev.billingAddress, state: e.target.value }
-                              }))}
-                              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                              placeholder="NY"
-                            />
-                          </div>
-                        </div>
-                        
-                        <div className="grid grid-cols-2 gap-4">
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              ZIP Code *
-                            </label>
-                            <input
-                              type="text"
-                              required
-                              value={paymentForm.billingAddress.zipCode}
-                              onChange={(e) => setPaymentForm(prev => ({ 
-                                ...prev, 
-                                billingAddress: { ...prev.billingAddress, zipCode: e.target.value }
-                              }))}
-                              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                              placeholder="10001"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Country *
-                            </label>
-                            <select
-                              required
-                              value={paymentForm.billingAddress.country}
-                              onChange={(e) => setPaymentForm(prev => ({ 
-                                ...prev, 
-                                billingAddress: { ...prev.billingAddress, country: e.target.value }
-                              }))}
-                              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                            >
-                              <option value="US">United States</option>
-                              <option value="CA">Canada</option>
-                              <option value="GB">United Kingdom</option>
-                              <option value="AU">Australia</option>
-                            </select>
-                          </div>
-                        </div>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          ZIP Code *
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={paymentForm.billingAddress.zipCode}
+                          onChange={(e) => setPaymentForm(prev => ({ 
+                            ...prev, 
+                            billingAddress: { ...prev.billingAddress, zipCode: e.target.value }
+                          }))}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                          placeholder="10001"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Country *
+                        </label>
+                        <select
+                          required
+                          value={paymentForm.billingAddress.country}
+                          onChange={(e) => setPaymentForm(prev => ({ 
+                            ...prev, 
+                            billingAddress: { ...prev.billingAddress, country: e.target.value }
+                          }))}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                        >
+                          <option value="US">United States</option>
+                          <option value="CA">Canada</option>
+                          <option value="GB">United Kingdom</option>
+                          <option value="AU">Australia</option>
+                        </select>
                       </div>
                     </div>
-                  </>
-                )}
-
-                {/* PayPal Notice */}
-                {paymentForm.paymentMethod === 'paypal' && (
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                    <div className="flex items-center space-x-2 text-blue-800">
-                      <Lock className="w-5 h-5" />
-                      <span className="font-medium">Secure PayPal Payment</span>
-                    </div>
-                    <p className="text-blue-700 text-sm mt-2">
-                      You will be redirected to PayPal to complete your payment securely.
-                    </p>
                   </div>
-                )}
+                </div>
 
                 {/* Submit Button */}
                 <button
                   type="submit"
-                  disabled={processing}
-                                      className="w-full bg-deep-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-deep-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+                  disabled={processing || !stripe}
+                  className="w-full bg-primary-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-primary-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
                 >
                   {processing ? (
                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
@@ -503,7 +376,7 @@ const Payment: React.FC = () => {
                 <div className="border-t border-gray-200 pt-4">
                   <div className="flex items-center justify-between">
                     <span className="text-lg font-bold text-gray-900">Total</span>
-                    <span className="text-lg font-bold text-deep-600">
+                    <span className="text-lg font-bold text-primary-600">
                       ${order.totalAmount.toFixed(2)}
                     </span>
                   </div>
@@ -516,10 +389,10 @@ const Payment: React.FC = () => {
                   <Clock className="w-4 h-4" />
                   <span>Order #{order._id.slice(-8)}</span>
                 </div>
-                                 <div className="flex items-center space-x-2 text-gray-600">
-                   <User className="w-4 h-4" />
-                   <span>{user ? `${user.firstName} ${user.lastName}` : 'User'}</span>
-                 </div>
+                <div className="flex items-center space-x-2 text-gray-600">
+                  <User className="w-4 h-4" />
+                  <span>{user ? `${user.firstName} ${user.lastName}` : 'User'}</span>
+                </div>
                 <div className="flex items-center space-x-2 text-gray-600">
                   <CheckCircle className="w-4 h-4" />
                   <span>Status: {order.status}</span>
@@ -545,7 +418,72 @@ const Payment: React.FC = () => {
           </div>
         </div>
       </div>
-    </div>
+    </Sidebar>
+  );
+};
+
+const Payment: React.FC = () => {
+  const { orderId } = useParams<{ orderId: string }>();
+  const navigate = useNavigate();
+  const { state } = useAuth();
+  const user = state.user;
+  const [order, setOrder] = useState<Order | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const fetchOrder = useCallback(async () => {
+    try {
+      setLoading(true);
+      console.log('Fetching order with ID:', orderId);
+      const response = await api.get(`/orders/${orderId}`);
+      console.log('Order response:', response.data);
+      setOrder(response.data.order);
+    } catch (error) {
+      console.error('Error fetching order:', error);
+      toast.error('Failed to load order details');
+      navigate('/client/orders');
+    } finally {
+      setLoading(false);
+    }
+  }, [orderId, navigate]);
+
+  useEffect(() => {
+    if (orderId) {
+      fetchOrder();
+    }
+  }, [orderId, fetchOrder]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading payment details...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!order) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Order Not Found</h2>
+          <p className="text-gray-600 mb-4">Order ID: {orderId}</p>
+          <button
+            onClick={() => navigate('/client/orders')}
+            className="text-primary-600 hover:text-primary-700 font-medium"
+          >
+            Back to Orders
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <Elements stripe={stripePromise}>
+      <PaymentForm order={order} user={user} />
+    </Elements>
   );
 };
 

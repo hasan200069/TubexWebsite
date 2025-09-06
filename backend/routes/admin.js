@@ -3,7 +3,6 @@ const User = require('../models/User');
 const Service = require('../models/Service');
 const Order = require('../models/Order');
 const Quote = require('../models/Quote');
-const Chat = require('../models/Chat');
 const { adminAuth } = require('../middleware/auth');
 
 const router = express.Router();
@@ -19,7 +18,6 @@ router.get('/dashboard', adminAuth, async (req, res) => {
       totalOrders,
       totalQuotes,
       pendingQuotes,
-      activeChats,
       recentOrders,
       monthlyRevenue
     ] = await Promise.all([
@@ -28,7 +26,6 @@ router.get('/dashboard', adminAuth, async (req, res) => {
       Order.countDocuments(),
       Quote.countDocuments(),
       Quote.countDocuments({ status: 'submitted' }),
-      Chat.countDocuments({ status: 'active' }),
       Order.find({ status: { $in: ['payment_confirmed', 'in_progress'] } })
         .populate('client', 'firstName lastName')
         .populate('service', 'title')
@@ -60,7 +57,6 @@ router.get('/dashboard', adminAuth, async (req, res) => {
         totalOrders,
         totalQuotes,
         pendingQuotes,
-        activeChats,
         monthlyRevenue: monthlyRevenue[0]?.total || 0
       },
       recentOrders

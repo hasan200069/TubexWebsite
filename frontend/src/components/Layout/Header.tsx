@@ -24,19 +24,7 @@ const Header: React.FC = () => {
     { name: 'FAQ', href: '/faq' },
   ];
 
-  const userNavigation = state.isAuthenticated
-    ? state.user?.role === 'admin'
-      ? [
-          { name: 'Admin Dashboard', href: '/admin', icon: User },
-          { name: 'Manage Services', href: '/admin/services', icon: Settings },
-          { name: 'Chat', href: '/admin/chat', icon: MessageCircle },
-        ]
-      : [
-          { name: 'Dashboard', href: '/dashboard', icon: User },
-          { name: 'Orders', href: '/orders', icon: ShoppingCart },
-          { name: 'Chat', href: '/chat', icon: MessageCircle },
-        ]
-    : [];
+  // User navigation moved to sidebar
 
   return (
     <header className="bg-white/95 backdrop-blur-md shadow-soft sticky top-0 z-50 border-b border-gray-200/50">
@@ -76,22 +64,13 @@ const Header: React.FC = () => {
           {/* User Menu */}
           <div className="hidden md:flex items-center space-x-4">
             {state.isAuthenticated ? (
-              <>
-                {userNavigation.map((item) => (
-                  <Link
-                    key={item.name}
-                    to={item.href}
-                    className={`flex items-center space-x-1 px-3 py-2 text-sm font-medium transition-colors duration-200 ${
-                      isActive(item.href)
-                        ? 'text-primary-600'
-                        : 'text-gray-700 hover:text-primary-600'
-                    }`}
-                  >
-                    <item.icon className="w-4 h-4" />
-                    <span>{item.name}</span>
-                  </Link>
-                ))}
-                
+              <div className="flex items-center space-x-4">
+                <Link
+                  to={state.user?.role === 'admin' ? '/admin' : '/client/dashboard'}
+                  className="text-gray-700 hover:text-primary-600 px-3 py-2 text-sm font-medium transition-colors duration-200"
+                >
+                  {state.user?.role === 'admin' ? 'Admin Panel' : 'Dashboard'}
+                </Link>
                 <div className="flex items-center space-x-2">
                   <span className="text-sm text-gray-700">
                     Hello, {state.user?.firstName}
@@ -104,7 +83,7 @@ const Header: React.FC = () => {
                     <span>Logout</span>
                   </button>
                 </div>
-              </>
+              </div>
             ) : (
               <div className="flex items-center space-x-4">
                 <Link
@@ -160,17 +139,14 @@ const Header: React.FC = () => {
             
             {state.isAuthenticated ? (
               <>
-                {userNavigation.map((item) => (
-                  <Link
-                    key={item.name}
-                    to={item.href}
-                    className="flex items-center space-x-2 px-3 py-2 text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50 transition-colors duration-200"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    <item.icon className="w-4 h-4" />
-                    <span>{item.name}</span>
-                  </Link>
-                ))}
+                <Link
+                  to={state.user?.role === 'admin' ? '/admin' : '/client/dashboard'}
+                  className="flex items-center space-x-2 px-3 py-2 text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50 transition-colors duration-200"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <User className="w-4 h-4" />
+                  <span>{state.user?.role === 'admin' ? 'Admin Panel' : 'Dashboard'}</span>
+                </Link>
                 
                 <button
                   onClick={() => {

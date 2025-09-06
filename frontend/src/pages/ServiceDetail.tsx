@@ -58,7 +58,7 @@ interface OrderFormData {
   customAmount?: number;
   requirements: string;
   timeline: string;
-  contactPreference: 'email' | 'phone' | 'chat';
+  contactPreference: 'email' | 'phone';
   additionalNotes: string;
 }
 
@@ -570,13 +570,12 @@ const ServiceDetail: React.FC = () => {
                     value={orderForm.contactPreference}
                     onChange={(e) => setOrderForm(prev => ({ 
                       ...prev, 
-                      contactPreference: e.target.value as 'email' | 'phone' | 'chat' 
+                      contactPreference: e.target.value as 'email' | 'phone' 
                     }))}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                   >
                     <option value="email">Email</option>
                     <option value="phone">Phone</option>
-                    <option value="chat">Live Chat</option>
                   </select>
                 </div>
 

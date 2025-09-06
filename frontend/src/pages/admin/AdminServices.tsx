@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import api from '../../config/api';
 import toast from 'react-hot-toast';
+import Sidebar from '../../components/Layout/Sidebar';
 
 interface Service {
   _id: string;
@@ -294,8 +295,8 @@ const AdminServices: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <Sidebar>
+      <div className="p-6">
         {/* Header */}
         <div className="mb-8">
           <div className="flex justify-between items-center">
@@ -751,7 +752,7 @@ const AdminServices: React.FC = () => {
           </div>
         </div>
       )}
-    </div>
+    </Sidebar>
   );
 };
 
