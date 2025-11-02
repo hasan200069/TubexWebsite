@@ -1,0 +1,214 @@
+.tech-stack {
+  padding: 100px 0;
+  background: var(--dark-bg);
+  color: var(--white);
+  position: relative;
+  overflow: hidden;
+}
+
+.tech-stack::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 30% 20%, rgba(0, 102, 204, 0.2) 0%, transparent 50%),
+    radial-gradient(circle at 70% 80%, rgba(0, 153, 255, 0.2) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.tech-stack-header {
+  text-align: center;
+  margin-bottom: 4rem;
+  position: relative;
+  z-index: 1;
+}
+
+.tech-stack-title {
+  font-size: 3rem;
+  font-weight: 900;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, var(--gradient-white-start) 0%, var(--secondary-color) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+  display: inline-block;
+}
+
+.tech-stack-subtitle {
+  font-size: 1.2rem;
+  color: var(--text-white-80);
+  margin-top: 1rem;
+}
+
+.tech-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.tech-card {
+  position: relative;
+  background: var(--white-05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 3rem 2rem;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.tech-card-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, var(--primary-10), var(--secondary-10));
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.tech-card:hover .tech-card-background {
+  opacity: 1;
+}
+
+.tech-card:hover {
+  transform: translateY(-15px) scale(1.02);
+  border-color: var(--border-secondary);
+  box-shadow: 0 20px 60px rgba(0, 102, 204, 0.4), 0 0 40px rgba(0, 153, 255, 0.3);
+}
+
+.tech-icon-wrapper {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tech-icon {
+  font-size: 3.5rem;
+  color: var(--secondary-color);
+  z-index: 2;
+  position: relative;
+  transition: all 0.5s ease;
+  filter: drop-shadow(0 0 20px rgba(0, 153, 255, 0.6));
+}
+
+.tech-icon-ring {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid rgba(0, 153, 255, 0.3);
+  animation: techRingRotate 4s linear infinite;
+}
+
+@keyframes techRingRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.tech-card:hover .tech-icon {
+  transform: scale(1.2) rotate(5deg);
+  color: var(--accent-color);
+}
+
+.tech-card:hover .tech-icon-ring {
+  border-color: var(--border-accent);
+  box-shadow: 0 0 30px rgba(0, 204, 255, 0.4);
+}
+
+.tech-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--white);
+  position: relative;
+  z-index: 1;
+}
+
+.tech-category {
+  font-size: 0.9rem;
+  color: var(--text-white-60);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  z-index: 1;
+}
+
+.tech-shine {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transform: rotate(45deg);
+  transition: all 0.6s ease;
+  opacity: 0;
+}
+
+.tech-card:hover .tech-shine {
+  animation: techShine 1s ease;
+}
+
+@keyframes techShine {
+  0% {
+    left: -50%;
+    top: -50%;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    left: 150%;
+    top: 150%;
+    opacity: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .tech-stack {
+    padding: 60px 0;
+  }
+
+  .tech-stack-title {
+    font-size: 2.2rem;
+  }
+
+  .tech-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .tech-card {
+    padding: 2.5rem 1.5rem;
+  }
+
+  .tech-icon-wrapper {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 1.5rem;
+  }
+
+  .tech-icon {
+    font-size: 2.5rem;
+  }
+}

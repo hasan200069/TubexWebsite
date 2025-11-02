@@ -1,69 +1,114 @@
-# TubeX IT Services Platform
+# tubexdubai Website
 
-A modern full-stack web application for IT services marketplace with real-time chat, payment integration, and comprehensive admin/client dashboards.
-
-## Tech Stack
-
-- **Frontend**: React + TailwindCSS
-- **Backend**: Node.js + Express  
-- **Database**: MongoDB + Mongoose
-- **Real-time**: Socket.IO
-- **Payments**: Stripe
-- **Auth**: JWT
+A modern, responsive React website for tubexdubai - Innovative IT Solutions for Your Business.
 
 ## Features
 
-### Public Website
-- Browse IT services without login
-- Pages: Home, Services, About, Contact, FAQ
-- Call-to-action for registration
+- 🎨 Modern and beautiful UI design
+- 📱 Fully responsive layout
+- ⚡ Fast performance with Vite
+- 🎯 Smooth scrolling navigation
+- 📧 Contact form with file attachments
+- 🍪 Cookie consent banner
+- 📸 Gallery section
+- 🔗 Social media integration ready
 
-### Client Dashboard  
-- Purchase IT services
-- Submit custom quote requests
-- Track orders and payments
-- Real-time chat with support
+## Getting Started
 
-### Admin Dashboard
-- Manage IT services (CRUD)
-- View/manage orders and quotes
-- Payment management
-- Client communication
+### Prerequisites
 
-## Quick Start
+- Node.js (v16 or higher)
+- npm or yarn
+
+### Installation
 
 1. Install dependencies:
-   ```bash
-   npm run install-all
-   ```
+```bash
+npm install
+```
 
-2. Set up environment variables:
-   - Copy `.env.example` to `.env` in backend folder
-   - Add your MongoDB URI, JWT secret, and Stripe keys
+2. Start the development server:
+```bash
+npm run dev
+```
 
-3. Start development servers:
-   ```bash
-   npm run dev
-   ```
+3. Open your browser and navigate to `http://localhost:5173`
+
+### Build for Production
+
+To create a production build:
+
+```bash
+npm run build
+```
+
+The build files will be in the `dist` directory.
+
+To preview the production build:
+
+```bash
+npm run preview
+```
 
 ## Project Structure
 
 ```
-├── backend/           # Node.js/Express API
-├── frontend/          # React application
-├── Logo-1.png        # Brand logo
-└── README.md
+TubexWebsite/
+├── src/
+│   ├── components/
+│   │   ├── Header.jsx
+│   │   ├── About.jsx
+│   │   ├── Services.jsx
+│   │   ├── Gallery.jsx
+│   │   ├── Contact.jsx
+│   │   └── Footer.jsx
+│   ├── App.jsx
+│   ├── main.jsx
+│   └── index.css
+├── Logo (1) (1).png
+├── index.html
+├── package.json
+└── vite.config.js
 ```
 
-## Environment Setup
+## Customization
 
-### Backend (.env)
-```
-MONGODB_URI=mongodb://localhost:27017/tubex
-JWT_SECRET=your_jwt_secret_here
-STRIPE_SECRET_KEY=your_stripe_secret
-PORT=5000
+### Replacing Gallery Images
+
+Replace the placeholder images in `src/components/Gallery.jsx` with your actual images. You can add images to a `public/images` folder and reference them like:
+
+```jsx
+src: '/images/your-image.jpg'
 ```
 
-### Frontend
-- API_URL configured in src/config.js
+### Updating Colors
+
+Edit the CSS variables in `src/index.css` to match your brand colors:
+
+```css
+:root {
+  --primary-color: #1a56db;
+  --secondary-color: #0ea5e9;
+  --accent-color: #f59e0b;
+  /* ... */
+}
+```
+
+### Contact Form Backend
+
+The contact form currently shows an alert on submission. To connect it to a backend:
+
+1. Update the `handleSubmit` function in `src/components/Contact.jsx`
+2. Add your API endpoint
+3. Handle form validation and submission
+
+## Technologies Used
+
+- React 18
+- Vite
+- Modern CSS with CSS Variables
+- Responsive Design
+
+## License
+
+Copyright © 2025 tubexdubai - All Rights Reserved.

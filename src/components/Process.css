@@ -1,0 +1,227 @@
+.process {
+  padding: 100px 0;
+  background: var(--white);
+  position: relative;
+  overflow: hidden;
+}
+
+.process::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    linear-gradient(135deg, transparent 0%, rgba(0, 102, 204, 0.02) 50%, transparent 100%);
+  pointer-events: none;
+}
+
+.process-header {
+  text-align: center;
+  margin-bottom: 5rem;
+}
+
+.process-title {
+  font-size: 3rem;
+  font-weight: 900;
+  margin-bottom: 1rem;
+  color: var(--text-dark);
+  position: relative;
+  display: inline-block;
+}
+
+.process-title::after {
+  content: '';
+  position: absolute;
+  bottom: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+  border-radius: 2px;
+}
+
+.process-subtitle {
+  font-size: 1.2rem;
+  color: var(--text-light);
+  margin-top: 2rem;
+}
+
+.process-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  position: relative;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.process-step {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.process-step:nth-child(odd) {
+  flex-direction: row;
+}
+
+.process-step:nth-child(even) {
+  flex-direction: row-reverse;
+}
+
+.step-connector {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 2px;
+  height: calc(100% + 3rem);
+  background: linear-gradient(180deg, var(--primary-color), var(--secondary-color));
+  transform: translateX(-50%);
+  opacity: 0.3;
+  z-index: 0;
+}
+
+.process-step:last-child .step-connector {
+  display: none;
+}
+
+.step-content {
+  position: relative;
+  z-index: 1;
+  background: var(--white);
+  border-radius: 24px;
+  padding: 2.5rem;
+  box-shadow: 0 10px 40px rgba(0, 102, 204, 0.1);
+  border: 1px solid rgba(0, 102, 204, 0.1);
+  transition: all 0.4s ease;
+  flex: 1;
+  max-width: 400px;
+}
+
+.process-step:nth-child(odd) .step-content {
+  margin-right: auto;
+  margin-left: 0;
+}
+
+.process-step:nth-child(even) .step-content {
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.step-content:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 60px rgba(0, 102, 204, 0.2);
+  border-color: var(--primary-color);
+}
+
+.step-number {
+  position: absolute;
+  top: -20px;
+  left: 2rem;
+  font-size: 6rem;
+  font-weight: 900;
+  color: var(--primary-10);
+  line-height: 1;
+  z-index: 0;
+}
+
+.step-icon-wrapper {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.step-icon {
+  font-size: 2.5rem;
+  color: var(--primary-color);
+  z-index: 2;
+  position: relative;
+  transition: all 0.4s ease;
+}
+
+.step-icon-glow {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--primary-20), transparent);
+  animation: stepIconPulse 3s ease-in-out infinite;
+}
+
+@keyframes stepIconPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+}
+
+.step-content:hover .step-icon {
+  transform: rotate(360deg) scale(1.2);
+  color: var(--secondary-color);
+}
+
+.step-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.step-description {
+  font-size: 1rem;
+  color: var(--text-light);
+  line-height: 1.8;
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 768px) {
+  .process {
+    padding: 60px 0;
+  }
+
+  .process-title {
+    font-size: 2.2rem;
+  }
+
+  .process-steps {
+    gap: 2rem;
+  }
+
+  .process-step:nth-child(odd),
+  .process-step:nth-child(even) {
+    flex-direction: column;
+  }
+
+  .process-step:nth-child(odd) .step-content,
+  .process-step:nth-child(even) .step-content {
+    margin: 0 auto;
+    max-width: 100%;
+  }
+
+  .step-connector {
+    display: none;
+  }
+
+  .step-content {
+    padding: 2rem 1.5rem;
+  }
+
+  .step-number {
+    font-size: 4rem;
+    top: -15px;
+  }
+}
