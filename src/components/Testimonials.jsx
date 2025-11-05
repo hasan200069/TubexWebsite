@@ -7,28 +7,28 @@ const Testimonials = () => {
 
   const testimonials = [
     {
-      name: 'Ahmed Al Maktoum',
-      role: 'CEO, Tech Innovations Dubai',
+      name: 'Michael Thompson',
+      role: 'CEO, Tech Innovations Inc',
       content: 'tubexdubai transformed our IT infrastructure completely. Their cloud migration services were seamless, and the team was professional throughout. Highly recommended!',
       rating: 5,
       image: '👨‍💼'
     },
     {
       name: 'Sarah Johnson',
-      role: 'CTO, Digital Solutions UAE',
+      role: 'CTO, Digital Solutions Group',
       content: 'Outstanding custom software development services. They understood our requirements perfectly and delivered a solution that exceeded our expectations. Great team!',
       rating: 5,
       image: '👩‍💼'
     },
     {
-      name: 'Mohammed Hassan',
+      name: 'David Martinez',
       role: 'IT Director, Enterprise Systems',
       content: 'The network security implementation by tubexdubai has significantly improved our cybersecurity posture. Professional, timely, and cost-effective services.',
       rating: 5,
       image: '👨‍💻'
     },
     {
-      name: 'Fatima Ali',
+      name: 'Emily Davis',
       role: 'Operations Manager, Business Pro',
       content: 'Excellent IT support and training services. Our team quickly adapted to the new systems thanks to their comprehensive training programs. 24/7 support is a game-changer.',
       rating: 5,
@@ -51,7 +51,7 @@ const Testimonials = () => {
       <div className="container">
         <div className="testimonials-header">
           <h2 className="testimonials-title">What Our Clients Say</h2>
-          <p className="testimonials-subtitle">Trusted by leading businesses in Dubai</p>
+          <p className="testimonials-subtitle">Trusted by leading businesses nationwide</p>
         </div>
 
         <div className="testimonials-carousel">
