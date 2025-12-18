@@ -3,7 +3,7 @@
     "routes": [
       {
         "src": "/privacy-policy",
-        "dest": "/privacy-policy.html"
+        "dest": "/privacy-policy"
       },
       {
         "src": "/(.*)",
