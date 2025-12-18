@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { FaFacebook, FaLinkedin, FaTwitter, FaInstagram, FaTiktok } from 'react-icons/fa'
 import './Footer.css'
 
@@ -100,7 +101,12 @@ const Footer = () => {
 
           <div className="footer-bottom">
             <p>Copyright © 2025 tubexdubai - All Rights Reserved.</p>
-            <p className="powered-by">Powered by <span>tubexdubai</span></p>
+            <div className="footer-bottom-links">
+              <Link to="/privacy-policy">Privacy Policy</Link>
+              <p className="powered-by">
+                Powered by <span>tubexdubai</span>
+              </p>
+            </div>
           </div>
         </div>
       </footer>
@@ -112,6 +118,13 @@ const Footer = () => {
             <p>
               We use cookies to analyze website traffic and optimize your website experience. 
               By accepting our use of cookies, your data will be aggregated with all other user data.
+            </p>
+            <p className="cookie-more">
+              You can learn more in our{' '}
+              <Link to="/privacy-policy">
+                Privacy Policy
+              </Link>
+              .
             </p>
             <button onClick={handleAcceptCookies} className="cookie-accept-btn">
               Accept
