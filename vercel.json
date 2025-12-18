@@ -1,6 +1,23 @@
 {
-    "rewrites": [
-      { "source": "/privacy-policy", "destination": "/privacy-policy" }
+    "version": 2,
+    "builds": [
+      {
+        "src": "package.json",
+        "use": "@vercel/static-build",
+        "config": {
+          "distDir": "build"
+        }
+      }
+    ],
+    "routes": [
+      {
+        "src": "/privacy-policy",
+        "dest": "/privacy-policy.html"
+      },
+      {
+        "src": "/(.*)",
+        "dest": "/index.html"
+      }
     ]
   }
   
