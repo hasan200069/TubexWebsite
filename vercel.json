@@ -1,13 +1,5 @@
 {
-    "version": 2,
-    "routes": [
-      {
-        "src": "/privacy-policy",
-        "dest": "/privacy-policy"
-      },
-      {
-        "src": "/(.*)",
-        "dest": "/$1"
-      }
+    "rewrites": [
+      { "source": "/(.*)", "destination": "/" }
     ]
   }
