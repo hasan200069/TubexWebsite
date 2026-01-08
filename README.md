@@ -34,7 +34,7 @@ npm run dev
 
 3. Open your browser and navigate to `http://localhost:5173`
 
-### Build for Production
+### Build for Productions
 
 To create a production build:
 
